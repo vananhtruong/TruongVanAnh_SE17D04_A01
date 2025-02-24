@@ -1,7 +1,18 @@
+﻿using BusinessObjects.Models;
+using Services;
+using Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
+
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+// Đăng ký Services với lifetime Scoped
+builder.Services.AddScoped<ISystemAccountService, SystemAccountService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<INewsArticleService, NewsArticleService>();
+builder.Services.AddScoped<ITagService, TagService>();
 
 var app = builder.Build();
 
