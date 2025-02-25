@@ -1,4 +1,5 @@
 ﻿using BusinessObjects.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Repositories.Interfaces
 {
@@ -6,5 +7,6 @@ namespace Repositories.Interfaces
     {
         Task<SystemAccount> GetSystemAccount(string email, string password);
         bool GetAdminSystemAccount(string? accountEmail, string? password);
+        Task<IEnumerable<SystemAccount>> SystemAccounts();
     }
 }

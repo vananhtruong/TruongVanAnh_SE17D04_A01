@@ -1,4 +1,5 @@
 ﻿using BusinessObjects.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Repositories.Interfaces
 {
@@ -10,5 +11,6 @@ namespace Repositories.Interfaces
         Task<NewsArticle?> UpdateNewsArticle(NewsArticle newsArticle);
         Task<bool> DeleteNewsArticle(string newsArticleId);
         Task AddTagToNewsArticle(string newsArticleId, int tagId);
+        Task<bool> NewsArticleExists(string id);
     }
 }

@@ -28,5 +28,9 @@ namespace DataAccessLayer
             string adminPassword = _configuration["AccountAdmin:Password"];
             return adminEmail.Equals(accountEmail) && adminPassword.Equals(password);
         }
+        public async Task<IEnumerable<SystemAccount>>SystemAccounts()
+        {
+            return await _context.SystemAccounts.ToListAsync();
+        }
     }
 }

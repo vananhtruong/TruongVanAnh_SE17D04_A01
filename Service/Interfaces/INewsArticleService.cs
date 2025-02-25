@@ -1,4 +1,5 @@
 ﻿using BusinessObjects.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Services.Interfaces
 {
@@ -6,9 +7,10 @@ namespace Services.Interfaces
     {
         Task<List<NewsArticle>> GetAllActiveNewsArticles();
         Task<NewsArticle?> GetNewsArticleById(string newsArticleId);
-        Task<NewsArticle> CreateNewsArticle(NewsArticle newsArticle, short createdById);
+        Task<NewsArticle> CreateNewsArticle(NewsArticle newsArticle);
         Task<NewsArticle?> UpdateNewsArticle(NewsArticle newsArticle);
         Task<bool> DeleteNewsArticle(string newsArticleId);
         Task AddTagToNewsArticle(string newsArticleId, int tagId);
+        Task<bool> NewsArticleExists(string id);
     }
 }

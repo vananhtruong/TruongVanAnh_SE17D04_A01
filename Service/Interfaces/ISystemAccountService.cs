@@ -1,4 +1,5 @@
 ﻿using BusinessObjects.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Services.Interfaces
 {
@@ -6,5 +7,6 @@ namespace Services.Interfaces
     {
         Task<SystemAccount> AuthenticateUser(string email, string password);
         bool IsAdmin(string? accountEmail, string? password);
+        Task<IEnumerable<SystemAccount>> SystemAccounts();
     }
 }

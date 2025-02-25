@@ -71,5 +71,9 @@ namespace DataAccessLayer
                 await _context.SaveChangesAsync();
             }
         }
+        public async Task<bool> NewsArticleExists(string id)
+        {
+            return await _context.NewsArticles.AnyAsync(e => e.NewsArticleId == id);
+        }
     }
 } 

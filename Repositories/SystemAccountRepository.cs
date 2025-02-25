@@ -1,5 +1,6 @@
 ﻿using BusinessObjects.Models;
 using DataAccessLayer;
+using Microsoft.EntityFrameworkCore;
 using Repositories.Interfaces;
 
 namespace Repositories
@@ -21,6 +22,10 @@ namespace Repositories
         public bool GetAdminSystemAccount(string? accountEmail, string? password)
         {
             return _systemAccountDAO.GetAdminSystemAccount(accountEmail, password);
+        }
+        public async Task<IEnumerable<SystemAccount>> SystemAccounts()
+        {
+            return await _systemAccountDAO.SystemAccounts();
         }
     }
 }

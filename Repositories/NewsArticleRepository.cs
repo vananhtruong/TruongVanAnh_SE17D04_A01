@@ -1,5 +1,6 @@
 ﻿using BusinessObjects.Models;
 using DataAccessLayer;
+using Microsoft.EntityFrameworkCore;
 using Repositories.Interfaces;
 
 namespace Repositories
@@ -41,6 +42,10 @@ namespace Repositories
         public async Task AddTagToNewsArticle(string newsArticleId, int tagId)
         {
             await _newsArticleDAO.AddTagToNewsArticle(newsArticleId, tagId);
+        }
+        public async Task<bool> NewsArticleExists(string id)
+        {
+            return await _newsArticleDAO.NewsArticleExists(id);
         }
     }
 }

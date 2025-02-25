@@ -1,4 +1,5 @@
 ﻿using BusinessObjects.Models;
+using Microsoft.EntityFrameworkCore;
 using Repositories.Interfaces;
 using Services.Interfaces;
 
@@ -27,6 +28,10 @@ namespace Services
         public bool IsAdmin(string? accountEmail, string? password)
         {
             return _systemAccountRepository.GetAdminSystemAccount(accountEmail, password);
+        }
+        public async Task<IEnumerable<SystemAccount>> SystemAccounts()
+        {
+            return await _systemAccountRepository.SystemAccounts();
         }
     }
 }

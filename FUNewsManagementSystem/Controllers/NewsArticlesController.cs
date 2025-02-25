@@ -6,23 +6,28 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BusinessObjects.Models;
+using Services.Interfaces;
 
 namespace FUNewsManagementSystem.Controllers
 {
     public class NewsArticlesController : Controller
     {
-        private readonly FunewsManagementContext _context;
+        private readonly INewsArticleService _newsArticleService;
+        private readonly ICategoryService _categoryService;
+        private readonly ISystemAccountService _systemAccountService;
 
-        public NewsArticlesController(FunewsManagementContext context)
+        public NewsArticlesController(INewsArticleService newsArticleService, ICategoryService categoryService, ISystemAccountService systemAccountService)
         {
-            _context = context;
+            _newsArticleService = newsArticleService;
+            _categoryService = categoryService;
+            _systemAccountService = systemAccountService;
         }
 
         // GET: NewsArticles
         public async Task<IActionResult> Index()
         {
-            var funewsManagementContext = _context.NewsArticles.Include(n => n.Category).Include(n => n.CreatedBy);
-            return View(await funewsManagementContext.ToListAsync());
+            var newsArticles = await _newsArticleService.GetAllActiveNewsArticles();
+            return View(newsArticles);
         }
 
         // GET: NewsArticles/Details/5
@@ -33,10 +38,7 @@ namespace FUNewsManagementSystem.Controllers
                 return NotFound();
             }
 
-            var newsArticle = await _context.NewsArticles
-                .Include(n => n.Category)
-                .Include(n => n.CreatedBy)
-                .FirstOrDefaultAsync(m => m.NewsArticleId == id);
+            var newsArticle = await _newsArticleService.GetNewsArticleById(id);
             if (newsArticle == null)
             {
                 return NotFound();
@@ -46,10 +48,12 @@ namespace FUNewsManagementSystem.Controllers
         }
 
         // GET: NewsArticles/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryDesciption");
-            ViewData["CreatedById"] = new SelectList(_context.SystemAccounts, "AccountId", "AccountId");
+            var categories = await _categoryService.GetAllCategories();
+            var systemAccounts = await _systemAccountService.SystemAccounts();
+            ViewData["CategoryId"] = new SelectList(categories, "CategoryId", "CategoryDesciption");
+            ViewData["CreatedById"] = new SelectList(systemAccounts, "AccountId", "AccountId");
             return View();
         }
 
@@ -62,12 +66,13 @@ namespace FUNewsManagementSystem.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(newsArticle);
-                await _context.SaveChangesAsync();
+                await _newsArticleService.CreateNewsArticle(newsArticle);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryDesciption", newsArticle.CategoryId);
-            ViewData["CreatedById"] = new SelectList(_context.SystemAccounts, "AccountId", "AccountId", newsArticle.CreatedById);
+            var categories = await _categoryService.GetAllCategories();
+            var systemAccounts = await _systemAccountService.SystemAccounts();
+            ViewData["CategoryId"] = new SelectList(categories, "CategoryId", "CategoryDesciption", newsArticle.CategoryId);
+            ViewData["CreatedById"] = new SelectList(systemAccounts, "AccountId", "AccountId", newsArticle.CreatedById);
             return View(newsArticle);
         }
 
@@ -79,13 +84,15 @@ namespace FUNewsManagementSystem.Controllers
                 return NotFound();
             }
 
-            var newsArticle = await _context.NewsArticles.FindAsync(id);
+            var newsArticle = await _newsArticleService.GetNewsArticleById(id);
             if (newsArticle == null)
             {
                 return NotFound();
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryDesciption", newsArticle.CategoryId);
-            ViewData["CreatedById"] = new SelectList(_context.SystemAccounts, "AccountId", "AccountId", newsArticle.CreatedById);
+            var categories = await _categoryService.GetAllCategories();
+            var systemAccounts = await _systemAccountService.SystemAccounts();
+            ViewData["CategoryId"] = new SelectList(categories, "CategoryId", "CategoryDesciption", newsArticle.CategoryId);
+            ViewData["CreatedById"] = new SelectList(systemAccounts, "AccountId", "AccountId", newsArticle.CreatedById);
             return View(newsArticle);
         }
 
@@ -105,12 +112,12 @@ namespace FUNewsManagementSystem.Controllers
             {
                 try
                 {
-                    _context.Update(newsArticle);
-                    await _context.SaveChangesAsync();
+                    await _newsArticleService.UpdateNewsArticle(newsArticle);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!NewsArticleExists(newsArticle.NewsArticleId))
+                    var exists = await NewsArticleExists(newsArticle.NewsArticleId);
+                    if (!exists)
                     {
                         return NotFound();
                     }
@@ -121,8 +128,10 @@ namespace FUNewsManagementSystem.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryDesciption", newsArticle.CategoryId);
-            ViewData["CreatedById"] = new SelectList(_context.SystemAccounts, "AccountId", "AccountId", newsArticle.CreatedById);
+            var categories = await _categoryService.GetAllCategories();
+            var systemAccounts = await _systemAccountService.SystemAccounts();
+            ViewData["CategoryId"] = new SelectList(categories, "CategoryId", "CategoryDesciption", newsArticle.CategoryId);
+            ViewData["CreatedById"] = new SelectList(systemAccounts, "AccountId", "AccountId", newsArticle.CreatedById);
             return View(newsArticle);
         }
 
@@ -134,10 +143,7 @@ namespace FUNewsManagementSystem.Controllers
                 return NotFound();
             }
 
-            var newsArticle = await _context.NewsArticles
-                .Include(n => n.Category)
-                .Include(n => n.CreatedBy)
-                .FirstOrDefaultAsync(m => m.NewsArticleId == id);
+            var newsArticle = await _newsArticleService.GetNewsArticleById(id);
             if (newsArticle == null)
             {
                 return NotFound();
@@ -151,19 +157,13 @@ namespace FUNewsManagementSystem.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var newsArticle = await _context.NewsArticles.FindAsync(id);
-            if (newsArticle != null)
-            {
-                _context.NewsArticles.Remove(newsArticle);
-            }
-
-            await _context.SaveChangesAsync();
+            await _newsArticleService.DeleteNewsArticle(id);
             return RedirectToAction(nameof(Index));
         }
 
-        private bool NewsArticleExists(string id)
+        private async Task<bool> NewsArticleExists(string id)
         {
-            return _context.NewsArticles.Any(e => e.NewsArticleId == id);
+            return await _newsArticleService.NewsArticleExists(id);
         }
     }
 }

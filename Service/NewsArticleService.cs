@@ -1,4 +1,5 @@
 ﻿using BusinessObjects.Models;
+using Microsoft.EntityFrameworkCore;
 using Repositories.Interfaces;
 using Services.Interfaces;
 
@@ -28,7 +29,7 @@ namespace Services
             return article;
         }
 
-        public async Task<NewsArticle> CreateNewsArticle(NewsArticle newsArticle, short createdById)
+        public async Task<NewsArticle> CreateNewsArticle(NewsArticle newsArticle)
         {
             // Kiểm tra logic kinh doanh (ví dụ: Headline và NewsTitle không được rỗng)
             if (string.IsNullOrEmpty(newsArticle.Headline) || string.IsNullOrEmpty(newsArticle.NewsTitle))
@@ -37,7 +38,6 @@ namespace Services
             }
             newsArticle.NewsStatus = true; // Mặc định bài viết mới là hoạt động
             newsArticle.CreatedDate = DateTime.Now;
-            newsArticle.CreatedById = createdById;
             newsArticle.ModifiedDate = DateTime.Now;
             return await _newsArticleRepository.CreateNewsArticle(newsArticle);
         }
@@ -71,6 +71,10 @@ namespace Services
                 throw new InvalidOperationException("News article not found or inactive.");
             }
             await _newsArticleRepository.AddTagToNewsArticle(newsArticleId, tagId);
+        }
+        public async Task<bool> NewsArticleExists(string id)
+        {
+            return await _newsArticleRepository.NewsArticleExists(id);
         }
     }
 }
