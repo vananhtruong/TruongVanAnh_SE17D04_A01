@@ -22,10 +22,16 @@ namespace DataAccessLayer
                 .FirstOrDefaultAsync();
         }
 
-        public bool GetAdminSystemAccount(string? accountEmail, string? password)
+        public bool CheckAdminSystemAccount(string? accountEmail, string? password)
         {
-            string adminEmail = _configuration["AccountAdmin:Email"];
-            string adminPassword = _configuration["AccountAdmin:Password"];
+            if (string.IsNullOrEmpty(accountEmail) || string.IsNullOrEmpty(password))
+            {
+                return false;
+            }
+
+            string adminEmail = _configuration["AccountAdmin:Email"] ?? string.Empty;
+            string adminPassword = _configuration["AccountAdmin:Password"] ?? string.Empty;
+
             return adminEmail.Equals(accountEmail) && adminPassword.Equals(password);
         }
         public async Task<IEnumerable<SystemAccount>> SystemAccounts()
@@ -65,6 +71,10 @@ namespace DataAccessLayer
         public async Task<bool> SystemAccountExists(short id)
         {
             return await _context.SystemAccounts.AnyAsync(e => e.AccountId == id);
+        }
+        public async Task<bool> IsEmailExit(string email)
+        {
+            return await _context.SystemAccounts.AnyAsync(e => e.AccountEmail == email);
         }
     }
 }

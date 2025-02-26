@@ -19,9 +19,9 @@ namespace Repositories
             return await _systemAccountDAO.GetSystemAccount(email, password);
         }
 
-        public bool GetAdminSystemAccount(string? accountEmail, string? password)
+        public bool CheckAdminSystemAccount(string? accountEmail, string? password)
         {
-            return _systemAccountDAO.GetAdminSystemAccount(accountEmail, password);
+            return _systemAccountDAO.CheckAdminSystemAccount(accountEmail, password);
         }
         public async Task<IEnumerable<SystemAccount>> SystemAccounts()
         {
@@ -46,6 +46,10 @@ namespace Repositories
         public async Task<bool> SystemAccountExists(short id)
         {
             return await _systemAccountDAO.SystemAccountExists(id);
+        }
+        public async Task<bool> IsEmailExit(string email)
+        {
+            return await _systemAccountDAO.IsEmailExit(email);
         }
     }
 }
