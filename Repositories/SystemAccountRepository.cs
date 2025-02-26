@@ -27,5 +27,25 @@ namespace Repositories
         {
             return await _systemAccountDAO.SystemAccounts();
         }
+        public async Task<SystemAccount> GetSystemAccountById(short Id)
+        {
+            return await _systemAccountDAO.GetSystemAccountById(Id);
+        }
+        public async Task<SystemAccount> CreateSystemAccount(SystemAccount systemAccount)
+        {
+            return await _systemAccountDAO.CreateSystemAccount(systemAccount);
+        }
+        public async Task<SystemAccount> UpdateSystemAccount(SystemAccount systemAccount)
+        {
+            return await _systemAccountDAO.UpdateSystemAccount(systemAccount);
+        }
+        public async Task DeleteSystemAccount(short Id)
+        {
+            await _systemAccountDAO.DeleteSystemAccount(Id);
+        }
+        public async Task<bool> SystemAccountExists(short id)
+        {
+            return await _systemAccountDAO.SystemAccountExists(id);
+        }
     }
 }

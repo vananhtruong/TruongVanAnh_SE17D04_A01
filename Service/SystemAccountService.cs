@@ -33,5 +33,25 @@ namespace Services
         {
             return await _systemAccountRepository.SystemAccounts();
         }
+        public async Task<SystemAccount> GetSystemAccountById(short Id)
+        {
+            return await _systemAccountRepository.GetSystemAccountById(Id);
+        }
+        public async Task<SystemAccount> CreateSystemAccount(SystemAccount systemAccount)
+        {
+            return await _systemAccountRepository.CreateSystemAccount(systemAccount);
+        }
+        public async Task<SystemAccount> UpdateSystemAccount(SystemAccount systemAccount)
+        {
+            return await _systemAccountRepository.UpdateSystemAccount(systemAccount);
+        }
+        public async Task DeleteSystemAccount(short Id)
+        {
+            await _systemAccountRepository.DeleteSystemAccount(Id);
+        }
+        public async Task<bool> SystemAccountExists(short id)
+        {
+            return await _systemAccountRepository.SystemAccountExists(id);
+        }
     }
 }

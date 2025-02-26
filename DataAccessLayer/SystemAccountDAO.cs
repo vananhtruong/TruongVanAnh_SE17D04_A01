@@ -28,9 +28,43 @@ namespace DataAccessLayer
             string adminPassword = _configuration["AccountAdmin:Password"];
             return adminEmail.Equals(accountEmail) && adminPassword.Equals(password);
         }
-        public async Task<IEnumerable<SystemAccount>>SystemAccounts()
+        public async Task<IEnumerable<SystemAccount>> SystemAccounts()
         {
             return await _context.SystemAccounts.ToListAsync();
+        }
+        public async Task<SystemAccount> GetSystemAccountById(short Id)
+        {
+            return await _context.SystemAccounts
+                .Where(x => x.AccountId == Id)
+                .FirstOrDefaultAsync();
+        }
+        public async Task<SystemAccount> CreateSystemAccount(SystemAccount systemAccount)
+        {
+            _context.SystemAccounts.Add(systemAccount);
+            await _context.SaveChangesAsync();
+            return systemAccount;
+        }
+        public async Task<SystemAccount> UpdateSystemAccount(SystemAccount systemAccount)
+        {
+            _context.SystemAccounts.Update(systemAccount);
+            await _context.SaveChangesAsync();
+            return systemAccount;
+        }
+        public async Task DeleteSystemAccount(short Id)
+        {
+            var systemAccount = await _context.SystemAccounts
+                .Where(x => x.AccountId == Id)
+                .FirstOrDefaultAsync();
+            if (systemAccount != null)
+            {
+                _context.SystemAccounts.Remove(systemAccount);
+                await _context.SaveChangesAsync();
+            }
+            ;
+        }
+        public async Task<bool> SystemAccountExists(short id)
+        {
+            return await _context.SystemAccounts.AnyAsync(e => e.AccountId == id);
         }
     }
 }
