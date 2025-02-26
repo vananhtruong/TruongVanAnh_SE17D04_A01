@@ -12,12 +12,10 @@ namespace FUNewsManagementSystem.Controllers
 {
     public class SystemAccountsController : Controller
     {
-        private readonly FunewsManagementContext _context;
         private readonly ISystemAccountService _systemAccountService;
 
-        public SystemAccountsController(FunewsManagementContext context,ISystemAccountService systemAccountService)
+        public SystemAccountsController(ISystemAccountService systemAccountService)
         {
-            _context = context;
             _systemAccountService = systemAccountService;
         } 
 

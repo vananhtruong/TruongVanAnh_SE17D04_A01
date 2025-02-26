@@ -1,5 +1,6 @@
 ﻿using BusinessObjects.Models;
 using DataAccessLayer;
+using Microsoft.EntityFrameworkCore;
 using Repositories.Interfaces;
 
 namespace Repositories
@@ -36,6 +37,10 @@ namespace Repositories
         public async Task<bool> DeleteCategory(short categoryId)
         {
             return await _categoryDAO.DeleteCategory(categoryId);
+        }
+        public bool CategoryExists(short id)
+        {
+            return _categoryDAO.CategoryExists(id);    
         }
     }
 }

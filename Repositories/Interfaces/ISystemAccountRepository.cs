@@ -14,5 +14,6 @@ namespace Repositories.Interfaces
         Task DeleteSystemAccount(short Id);
         Task<bool> SystemAccountExists(short id);
         Task<bool> IsEmailExit(string email);
+        Task<SystemAccount> GetSystemAccountByEmail(string email);
     }
 }

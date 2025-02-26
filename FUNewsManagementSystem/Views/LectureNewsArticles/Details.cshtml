@@ -5,74 +5,142 @@
     Layout = "~/Views/Shared/_LayoutLecturer.cshtml";
 }
 
-<h1>Details</h1>
 
-<div>
-    <h4>NewsArticle</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.NewsTitle)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.NewsTitle)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Headline)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Headline)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.NewsContent)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.NewsContent)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.NewsSource)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.NewsSource)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.NewsStatus)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.NewsStatus)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.UpdatedById)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.UpdatedById)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ModifiedDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ModifiedDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Category)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Category.CategoryDesciption)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedBy)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedBy.AccountId)
-        </dd>
-    </dl>
+<div class="container py-5">
+    <div class="card shadow-lg border-0 rounded-lg overflow-hidden">
+        <!-- Header Section -->
+        <div class="card-header position-relative p-5 text-white" style="background: linear-gradient(135deg, #1e3c72, #2a5298);">
+            <div class="overlay"></div>
+            <h1 class="mb-2 fw-bold" style="font-size: 2.5rem; line-height: 1.2;">
+                @Html.DisplayFor(model => model.NewsTitle)
+            </h1>
+            <h5 class="opacity-90 mb-3">@Html.DisplayFor(model => model.Headline)</h5>
+            <small class="d-flex align-items-center opacity-80">
+                <i class="fas fa-calendar-alt me-2"></i>
+                Published on: @Html.DisplayFor(model => model.CreatedDate, "{0:MMMM dd, yyyy}")
+            </small>
+        </div>
+
+        <!-- Content Section -->
+        <div class="card-body p-5 news-content">
+            <h4 class="fw-semibold mb-4 text-dark">Content</h4>
+            <div class="content-text text-dark lh-lg">
+                @Html.Raw(Model.NewsContent)
+            </div>
+        </div>
+
+        <!-- Metadata Section -->
+        <div class="card-body bg-light p-5 news-meta">
+            <h5 class="fw-semibold mb-4 text-dark">Article Details</h5>
+            <div class="row g-4">
+                <div class="col-md-6 d-flex align-items-center">
+                    <i class="fas fa-link me-3 text-primary"></i>
+                    <div>
+                        <strong>Source:</strong> @Html.DisplayFor(model => model.NewsSource)
+                    </div>
+                </div>
+                <div class="col-md-6 d-flex align-items-center">
+                    <i class="fas fa-info-circle me-3 text-primary"></i>
+                    <div>
+                        <strong>Status:</strong> @Html.DisplayFor(model => model.NewsStatus)
+                    </div>
+                </div>
+                <div class="col-md-6 d-flex align-items-center">
+                    <i class="fas fa-user-edit me-3 text-primary"></i>
+                    <div>
+                        <strong>Updated By:</strong> @Html.DisplayFor(model => model.UpdatedById)
+                    </div>
+                </div>
+                <div class="col-md-6 d-flex align-items-center">
+                    <i class="fas fa-clock me-3 text-primary"></i>
+                    <div>
+                        <strong>Modified:</strong> @Html.DisplayFor(model => model.ModifiedDate, "{0:MMMM dd, yyyy}")
+                    </div>
+                </div>
+                <div class="col-md-6 d-flex align-items-center">
+                    <i class="fas fa-folder me-3 text-primary"></i>
+                    <div>
+                        <strong>Category:</strong> @Html.DisplayFor(model => model.Category.CategoryDesciption)
+                    </div>
+                </div>
+                <div class="col-md-6 d-flex align-items-center">
+                    <i class="fas fa-user me-3 text-primary"></i>
+                    <div>
+                        <strong>Created By:</strong> @Html.DisplayFor(model => model.CreatedBy.AccountId)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Action -->
+        <div class="card-footer bg-transparent border-top-0 p-5 text-end">
+            <a class="btn btn-primary px-4 py-2" asp-action="Index">
+                <i class="fas fa-arrow-left me-2"></i> Back to List
+            </a>
+        </div>
+    </div>
 </div>
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+
+<style>
+    .card {
+        max-width: 1000px;
+        margin: 0 auto;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .card-header {
+        background: linear-gradient(135deg, #1e3c72, #2a5298);
+        position: relative;
+    }
+
+        .card-header .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.1);
+            z-index: 1;
+        }
+
+        .card-header h1, .card-header h5, .card-header small {
+            position: relative;
+            z-index: 2;
+        }
+
+    .news-content {
+        background-color: #fff;
+        line-height: 1.8;
+    }
+
+    .content-text {
+        font-size: 1.1rem;
+        color: #333;
+    }
+
+    .news-meta {
+        background-color: #f5f6f8;
+    }
+
+        .news-meta i {
+            font-size: 1.2rem;
+            color: #2a5298;
+        }
+
+    .btn-primary {
+        background-color: #2a5298;
+        border-color: #2a5298;
+        transition: all 0.3s ease;
+    }
+
+        .btn-primary:hover {
+            background-color: #1e3c72;
+            border-color: #1e3c72;
+            transform: translateY(-2px);
+        }
+
+    .card-footer {
+        padding-top: 0;
+    }
+</style>

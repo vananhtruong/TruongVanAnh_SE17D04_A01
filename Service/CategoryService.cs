@@ -1,4 +1,5 @@
 ﻿using BusinessObjects.Models;
+using Microsoft.EntityFrameworkCore;
 using Repositories.Interfaces;
 using Services.Interfaces;
 
@@ -65,6 +66,10 @@ namespace Services
                 throw new InvalidOperationException("Cannot delete category with subcategories.");
             }
             return await _categoryRepository.DeleteCategory(categoryId);
+        }
+        public bool CategoryExists(short id)
+        {
+            return _categoryRepository.CategoryExists(id);
         }
     }
 }

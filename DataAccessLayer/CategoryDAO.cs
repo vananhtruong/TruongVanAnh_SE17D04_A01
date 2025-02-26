@@ -15,13 +15,15 @@ namespace DataAccessLayer
         // Lấy tất cả danh mục
         public async Task<List<Category>> GetAllCategories()
         {
-            return await _context.Categories.ToListAsync();
+            return await _context.Categories.Include(c => c.ParentCategory).ToListAsync();
         }
 
         // Lấy danh mục theo ID
         public async Task<Category?> GetCategoryById(short categoryId)
         {
-            return await _context.Categories.FindAsync(categoryId);
+            return await _context.Categories
+                                 .Include(c => c.ParentCategory)
+                                 .FirstOrDefaultAsync(c => c.CategoryId == categoryId);
         }
 
         // Tạo mới danh mục
@@ -56,6 +58,10 @@ namespace DataAccessLayer
                 return true;
             }
             return false;
+        }
+        public bool CategoryExists(short id)
+        {
+            return _context.Categories.Any(e => e.CategoryId == id);
         }
     }
 }

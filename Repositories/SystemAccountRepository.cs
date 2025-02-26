@@ -51,5 +51,9 @@ namespace Repositories
         {
             return await _systemAccountDAO.IsEmailExit(email);
         }
+        public async Task<SystemAccount> GetSystemAccountByEmail(string email)
+        {
+            return await _systemAccountDAO.GetSystemAccountByEmail(email);
+        }
     }
 }

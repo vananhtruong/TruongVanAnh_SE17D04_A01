@@ -7,6 +7,7 @@ using Services.Interfaces;
 using System.Security.Claims;
 using Microsoft.Extensions.Configuration;
 using System.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Services
 {
@@ -55,6 +56,10 @@ namespace Services
         {
             return await _systemAccountRepository.SystemAccountExists(id);
         }
+        public async Task<SystemAccount> GetSystemAccountByEmail(string email)
+        {
+            return await _systemAccountRepository.GetSystemAccountByEmail(email);
+        }
         public async Task<(int role, string message)> Login(SystemAccount accountLogin, HttpContext httpContext)
         {
             string message = "";
@@ -96,21 +101,11 @@ namespace Services
 
                     httpContext.Session.SetString("UserEmail", account.AccountEmail);
                     httpContext.Session.SetString("UserRole", role);
+                    httpContext.Session.SetString("UserName", account.AccountName);
                     return (account.AccountRole ?? 0, "");
                 }
             }
         }
-        //private async Task SignInUser(HttpContext httpContext, List<Claim> claims)
-        //{
-        //    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-        //    var authProperties = new AuthenticationProperties { IsPersistent = true }; // Cookie sẽ tồn tại sau khi đóng trình duyệt
-
-        //    await httpContext.SignInAsync(
-        //        CookieAuthenticationDefaults.AuthenticationScheme,
-        //        new ClaimsPrincipal(claimsIdentity),
-        //        authProperties
-        //    );
-        //}
         private string GetRole(int role)
         {
             var roleSection = _configuration.GetSection("AccountRole");

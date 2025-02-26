@@ -18,5 +18,6 @@ namespace Services.Interfaces
         Task DeleteSystemAccount(short Id);
         Task<bool> SystemAccountExists(short id);
         Task<(int role, string message)> Login(SystemAccount accountLogin, HttpContext httpContext);
+        Task<SystemAccount> GetSystemAccountByEmail(string email);
     }
 }

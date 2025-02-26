@@ -76,5 +76,11 @@ namespace DataAccessLayer
         {
             return await _context.SystemAccounts.AnyAsync(e => e.AccountEmail == email);
         }
+        public async Task<SystemAccount> GetSystemAccountByEmail(string email)
+        {
+            return await _context.SystemAccounts
+                .Where(x => x.AccountEmail == email)
+                .FirstOrDefaultAsync();
+        }
     }
 }

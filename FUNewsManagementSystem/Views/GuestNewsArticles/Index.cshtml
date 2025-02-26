@@ -1,84 +1,56 @@
 ﻿@model IEnumerable<BusinessObjects.Models.NewsArticle>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "News Articles";
     Layout = "~/Views/Shared/_LayoutGuest.cshtml";
 }
 
-<h1>Index</h1>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.NewsTitle)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Headline)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NewsContent)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NewsSource)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NewsStatus)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UpdatedById)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ModifiedDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Category)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedBy)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.NewsTitle)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Headline)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NewsContent)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NewsSource)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NewsStatus)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UpdatedById)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ModifiedDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Category.CategoryDesciption)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedBy.AccountId)
-            </td>
-            <td>
-                <a asp-action="Details" asp-route-id="@item.NewsArticleId">Details</a> 
-            </td>
-        </tr>
+<div class="container py-4">
+    <h1 class="mb-4 text-center fw-bold">Latest News</h1>
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4 col-sm-6 mb-4">
+                <div class="card h-100 shadow-sm border-0 transition-hover">
+                    <div class="card-body p-4">
+                        <h5 class="card-title fw-bold text-primary mb-2">
+                            @Html.DisplayFor(modelItem => item.NewsTitle)
+                        </h5>
+                        <h6 class="card-subtitle mb-3 text-muted">
+                            @Html.DisplayFor(modelItem => item.Headline)
+                        </h6>
+                        <p class="card-text text-dark">
+                            @Html.Raw(GetShortContent(item.NewsContent, 100))
+                        </p>
+                    </div>
+                    <div class="card-footer bg-transparent border-top-0 pt-0 pb-3 px-4">
+                        <small class="text-muted d-block mb-2">
+                            <span>@Html.DisplayFor(modelItem => item.CreatedDate, "{0:MMM dd, yyyy}")</span> |
+                            <span>@Html.DisplayFor(modelItem => item.NewsSource)</span> |
+                            <span>@Html.DisplayFor(modelItem => item.Category.CategoryDesciption)</span>
+                        </small>
+                        <a class="btn btn-outline-primary btn-sm float-end"
+                           asp-action="Details"
+                           asp-route-id="@item.NewsArticleId">
+                            Read More <i class="fas fa-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@functions {
+    // Helper method to truncate content
+    public string GetShortContent(string content, int maxLength)
+    {
+        if (string.IsNullOrEmpty(content))
+            return string.Empty;
+
+        if (content.Length <= maxLength)
+            return content;
+
+        return content.Substring(0, maxLength) + "...";
+    }
 }
-    </tbody>
-</table>

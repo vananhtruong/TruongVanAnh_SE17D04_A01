@@ -1,4 +1,5 @@
 ﻿using BusinessObjects.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Services.Interfaces
 {
@@ -9,5 +10,6 @@ namespace Services.Interfaces
         Task<Category> CreateCategory(Category category);
         Task<Category?> UpdateCategory(Category category);
         Task<bool> DeleteCategory(short categoryId);
+        bool CategoryExists(short id);
     }
 }
