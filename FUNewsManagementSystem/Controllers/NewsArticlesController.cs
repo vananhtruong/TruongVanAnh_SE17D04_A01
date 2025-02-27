@@ -24,15 +24,19 @@ namespace FUNewsManagementSystem.Controllers
         }
 
         // GET: NewsArticles
-        public async Task<IActionResult> Index(string? searchString)
+        public async Task<IActionResult> Index(string searchString, int? categoryId, bool createdByMe)
         {
-            if (!String.IsNullOrEmpty(searchString))
+            SystemAccount systemAccount = null;
+            if (createdByMe)
             {
-                var newsArticlesSearch = await _newsArticleService.SearchNewsArticles(searchString);
-                ViewData["CurrentFilter"] = searchString;
-                return View(newsArticlesSearch);
+                string userEmail = HttpContext.Session.GetString("UserEmail");
+                systemAccount = await _systemAccountService.GetSystemAccountByEmail(userEmail);
             }
-            var newsArticles = await _newsArticleService.GetAllActiveNewsArticles();
+            var categories = await _categoryService.GetAllCategories();
+            ViewData["CurrentFilter"] = searchString;
+            ViewData["CategoryId"] = new SelectList(categories, "CategoryId", "CategoryName", categoryId);
+            ViewData["CreatedByMe"] = createdByMe;
+            var newsArticles = await _newsArticleService.NewsArticlesStaff(searchString, categoryId ?? 0, systemAccount?.AccountId ?? 0);
             return View(newsArticles);
         }
 

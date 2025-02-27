@@ -1,5 +1,6 @@
 ﻿using BusinessObjects.Models;
 using DataAccessLayer;
+using Microsoft.EntityFrameworkCore;
 using Repositories.Interfaces;
 
 namespace Repositories
@@ -36,6 +37,10 @@ namespace Repositories
         public async Task<bool> DeleteTag(int tagId)
         {
             return await _tagDAO.DeleteTag(tagId);
+        }
+        public bool TagExists(int id)
+        {
+            return _tagDAO.TagExists(id);
         }
     }
 }

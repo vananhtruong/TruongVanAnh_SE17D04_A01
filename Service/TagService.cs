@@ -1,4 +1,5 @@
 ﻿using BusinessObjects.Models;
+using Microsoft.EntityFrameworkCore;
 using Repositories.Interfaces;
 using Services.Interfaces;
 
@@ -50,6 +51,10 @@ namespace Services
                 return false;
             }
             return await _tagRepository.DeleteTag(tagId);
+        }
+        public bool TagExists(int id)
+        {
+            return _tagRepository.TagExists(id);
         }
     }
 }

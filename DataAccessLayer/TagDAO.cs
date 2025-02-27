@@ -57,5 +57,9 @@ namespace DataAccessLayer
             }
             return false;
         }
+        public bool TagExists(int id)
+        {
+            return _context.Tags.Any(e => e.TagId == id);
+        }
     }
 }

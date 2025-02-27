@@ -12,6 +12,7 @@ namespace Services.Interfaces
         Task<bool> DeleteNewsArticle(string newsArticleId);
         Task AddTagToNewsArticle(string newsArticleId, int tagId);
         Task<bool> NewsArticleExists(string id);
-        Task<List<NewsArticle>> SearchNewsArticles(string searchString);
+        Task<List<NewsArticle>> NewsArticlesFilter(string searchString, int cateogryId);
+        Task<List<NewsArticle>> NewsArticlesStaff(string searchString, int cateogryId, int id);
     }
 }

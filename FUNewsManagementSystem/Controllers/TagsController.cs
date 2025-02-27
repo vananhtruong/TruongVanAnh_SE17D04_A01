@@ -6,42 +6,24 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BusinessObjects.Models;
+using Services.Interfaces;
 
 namespace FUNewsManagementSystem.Controllers
 {
     public class TagsController : Controller
     {
-        private readonly FunewsManagementContext _context;
+        private readonly ITagService _tagService;
 
-        public TagsController(FunewsManagementContext context)
+        public TagsController(ITagService tagService)
         {
-            _context = context;
+            _tagService = tagService;
         }
 
         // GET: Tags
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Tags.ToListAsync());
+            return View(await _tagService.GetAllTags());
         }
-
-        // GET: Tags/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var tag = await _context.Tags
-                .FirstOrDefaultAsync(m => m.TagId == id);
-            if (tag == null)
-            {
-                return NotFound();
-            }
-
-            return View(tag);
-        }
-
         // GET: Tags/Create
         public IActionResult Create()
         {
@@ -57,8 +39,8 @@ namespace FUNewsManagementSystem.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(tag);
-                await _context.SaveChangesAsync();
+
+                await _tagService.CreateTag(tag);
                 return RedirectToAction(nameof(Index));
             }
             return View(tag);
@@ -72,7 +54,7 @@ namespace FUNewsManagementSystem.Controllers
                 return NotFound();
             }
 
-            var tag = await _context.Tags.FindAsync(id);
+            var tag = await _tagService.GetTagById(id.Value);
             if (tag == null)
             {
                 return NotFound();
@@ -96,8 +78,7 @@ namespace FUNewsManagementSystem.Controllers
             {
                 try
                 {
-                    _context.Update(tag);
-                    await _context.SaveChangesAsync();
+                    await _tagService.UpdateTag(tag);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -114,43 +95,29 @@ namespace FUNewsManagementSystem.Controllers
             }
             return View(tag);
         }
-
-        // GET: Tags/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var tag = await _context.Tags
-                .FirstOrDefaultAsync(m => m.TagId == id);
-            if (tag == null)
-            {
-                return NotFound();
-            }
-
-            return View(tag);
-        }
-
-        // POST: Tags/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var tag = await _context.Tags.FindAsync(id);
-            if (tag != null)
+            var result = new { success = false, message = "Error deleting tag." };
+
+            try
             {
-                _context.Tags.Remove(tag);
+                await _tagService.DeleteTag(id);
+                result = new { success = true, message = "Tag deleted successfully." };
+
+            }
+            catch (Exception ex)
+            {
+                result = new { success = false, message = ex.Message };
             }
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Json(result);
         }
 
         private bool TagExists(int id)
         {
-            return _context.Tags.Any(e => e.TagId == id);
+            return _tagService.TagExists(id);
         }
     }
 }

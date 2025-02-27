@@ -1,52 +1,87 @@
 ﻿@model IEnumerable<BusinessObjects.Models.SystemAccount>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Accounts";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.AccountName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AccountEmail)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AccountRole)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AccountPassword)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.AccountName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AccountEmail)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AccountRole)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AccountPassword)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.AccountId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.AccountId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.AccountId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="card shadow-sm mb-4">
+    <!-- Header with Search -->
+    <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">System Accounts</h5>
+        <div class="d-flex align-items-center">
+            <!-- Search Form -->
+            <form asp-action="Index" method="get" class="d-flex me-3">
+                <input class="form-control form-control-sm me-2"
+                       type="search"
+                       name="searchString"
+                       placeholder="Search..."
+                       value="@ViewBag.CurrentFilter"
+                       aria-label="Search">
+                <button class="btn btn-outline-light btn-sm" type="submit">
+                    <i class="bi bi-search"></i>
+                </button>
+            </form>
+            <!-- Create Button -->
+            <a asp-action="Create" class="btn btn-success btn-sm">
+                <i class="bi bi-plus"></i> New
+            </a>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="card-body p-0">
+        <table class="table table-hover mb-0">
+            <thead class="table-dark">
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.AccountName)</th>
+                    <th>@Html.DisplayNameFor(model => model.AccountEmail)</th>
+                    <th>@Html.DisplayNameFor(model => model.AccountRole)</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model?.Any() ?? true)
+                {
+                    <tr>
+                        <td colspan="4" class="text-center py-3 text-muted">
+                            No accounts found
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.AccountName)</td>
+                            <td>
+                                <a href="mailto:@item.AccountEmail">
+                                    @Html.DisplayFor(modelItem => item.AccountEmail)
+                                </a>
+                            </td>
+                            <td>@Html.DisplayFor(modelItem => item.AccountRole)</td>
+                            <td class="text-end">
+                                <a asp-action="Edit"
+                                   asp-route-id="@item.AccountId"
+                                   class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a asp-action="Details"
+                                   asp-route-id="@item.AccountId"
+                                   class="btn btn-sm btn-outline-info">
+                                    <i class="bi bi-info-circle"></i>
+                                </a>
+                                <a asp-action="Delete"
+                                   asp-route-id="@item.AccountId"
+                                   class="btn btn-sm btn-outline-danger">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

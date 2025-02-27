@@ -47,9 +47,13 @@ namespace Repositories
         {
             return await _newsArticleDAO.NewsArticleExists(id);
         }
-        public async Task<List<NewsArticle>> SearchNewsArticles(string searchString)
+        public async Task<List<NewsArticle>> NewsArticlesFilter(string searchString, int cateogryId)
         {
-            return await _newsArticleDAO.SearchNewsArticles(searchString);
+            return await _newsArticleDAO.NewsArticlesFilter(searchString, cateogryId);
+        }
+        public async Task<List<NewsArticle>> NewsArticlesStaff(string searchString, int cateogryId, int id)
+        {
+            return await _newsArticleDAO.NewsArticlesStaff(searchString, cateogryId, id);
         }
     }
 }

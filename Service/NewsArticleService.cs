@@ -76,9 +76,13 @@ namespace Services
         {
             return await _newsArticleRepository.NewsArticleExists(id);
         }
-        public async Task<List<NewsArticle>> SearchNewsArticles(string searchString)
+        public async Task<List<NewsArticle>> NewsArticlesFilter(string searchString, int cateogryId)
         {
-            return await _newsArticleRepository.SearchNewsArticles(searchString);
+            return await _newsArticleRepository.NewsArticlesFilter(searchString, cateogryId);
+        }
+        public async Task<List<NewsArticle>> NewsArticlesStaff(string searchString, int cateogryId, int id)
+        {
+            return await _newsArticleRepository.NewsArticlesStaff(searchString, cateogryId, id);
         }
     }
 }

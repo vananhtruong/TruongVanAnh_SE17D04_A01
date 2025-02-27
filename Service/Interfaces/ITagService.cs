@@ -1,4 +1,5 @@
 ﻿using BusinessObjects.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Services.Interfaces
 {
@@ -9,5 +10,6 @@ namespace Services.Interfaces
         Task<Tag> CreateTag(Tag tag);
         Task<Tag?> UpdateTag(Tag tag);
         Task<bool> DeleteTag(int tagId);
+        bool TagExists(int id);
     }
 }

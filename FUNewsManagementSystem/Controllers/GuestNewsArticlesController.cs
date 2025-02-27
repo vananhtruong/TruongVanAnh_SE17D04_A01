@@ -13,22 +13,21 @@ namespace FUNewsManagementSystem.Controllers
     public class GuestNewsArticlesController : Controller
     {
         private readonly INewsArticleService _newsArticleService;
+        private readonly ICategoryService _categoryService;
 
-        public GuestNewsArticlesController(INewsArticleService newsArticleService)
+        public GuestNewsArticlesController(INewsArticleService newsArticleService, ICategoryService categoryService)
         {
             _newsArticleService = newsArticleService;
+            _categoryService = categoryService;
         }
 
         // GET: NewsArticles
-        public async Task<IActionResult> Index(string? searchString)
+        public async Task<IActionResult> Index(string searchString, int? categoryId) 
         {
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                var newsArticlesSearch = await _newsArticleService.SearchNewsArticles(searchString);
-                ViewData["CurrentFilter"] = searchString;
-                return View(newsArticlesSearch);
-            }
-                var newsArticles = await _newsArticleService.GetAllActiveNewsArticles();
+            var categories = await _categoryService.GetAllCategories();
+            ViewData["CurrentFilter"] = searchString;
+            ViewData["CategoryId"] = new SelectList(categories, "CategoryId", "CategoryName", categoryId);
+            var newsArticles = await _newsArticleService.NewsArticlesFilter(searchString, categoryId ?? 0);
             return View(newsArticles);
         }
 

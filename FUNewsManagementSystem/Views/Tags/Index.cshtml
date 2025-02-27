@@ -5,38 +5,72 @@
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
-<h1>Index</h1>
+<div class="container-fluid">
+    <h1 class="mt-4 mb-4">Tag Management</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.TagName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Note)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.TagName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Note)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.TagId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.TagId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.TagId">Delete</a>
-            </td>
-        </tr>
+    <div class="mb-3">
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Create New Tag
+        </a>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <table class="table table-hover table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">@Html.DisplayNameFor(model => model.TagName)</th>
+                        <th scope="col">@Html.DisplayNameFor(model => model.Note)</th>
+                        <th scope="col" class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.TagName)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Note)</td>
+                            <td class="text-center">
+                                <a asp-action="Edit" 
+                                   asp-route-id="@item.TagId" 
+                                   class="btn btn-sm btn-warning">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
+                                <button class="btn btn-sm btn-danger" 
+                                        onclick="confirmDelete('@item.TagId')">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function confirmDelete(tagId) {
+            if (confirm('Are you sure you want to delete this tag?')) {
+                $.ajax({
+                    url: '@Url.Action("Delete")/' + tagId,
+                    type: 'POST',
+                    headers: {
+                        'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                    },
+                    success: function (result) {
+                        if (result.success) {
+                            location.reload();
+                        } else {
+                            alert('Error deleting tag: ' + result.message);
+                        }
+                    },
+                    error: function () {
+                        alert('An error occurred while deleting the tag.');
+                    }
+                });
+            }
+        }
+    </script>
 }
-    </tbody>
-</table>
