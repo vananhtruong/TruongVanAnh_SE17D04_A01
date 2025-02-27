@@ -24,8 +24,14 @@ namespace FUNewsManagementSystem.Controllers
         }
 
         // GET: NewsArticles
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? searchString)
         {
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                var newsArticlesSearch = await _newsArticleService.SearchNewsArticles(searchString);
+                ViewData["CurrentFilter"] = searchString;
+                return View(newsArticlesSearch);
+            }
             var newsArticles = await _newsArticleService.GetAllActiveNewsArticles();
             return View(newsArticles);
         }

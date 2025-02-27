@@ -13,72 +13,51 @@
         <div class="card-body p-4">
             <!-- Search and Buttons -->
             <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
-                <div class="input-group" style="max-width: 400px;">
+                <form class="input-group" style="max-width: 400px;" asp-action="Index" method="get">
                     <span class="input-group-text bg-light border-0">
                         <i class="fas fa-search"></i>
                     </span>
-                    <input type="text" id="searchInput" class="form-control" placeholder="Search articles..."
-                           onkeyup="searchArticles(this.value)">
-                </div>
+                    <input type="text" id="searchInput" name="searchString" class="form-control"
+                           placeholder="Search articles..." value="@ViewData["CurrentFilter"]">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search me-1"></i> Search
+                    </button>
+                </form>
                 <div class="d-flex gap-2">
-                    <button class="btn btn-outline-secondary" onclick="clearSearch()">Clear Search</button>
+                    <a class="btn btn-outline-secondary" asp-action="Index">Clear Search</a>
                     <a class="btn btn-success" asp-action="Create">
                         <i class="fas fa-plus me-1"></i> Create New
                     </a>
                 </div>
             </div>
 
-            <!-- Table -->
+            <!-- Simplified Table -->
             <div class="table-responsive">
                 <table class="table table-striped table-hover table-bordered" style="width: 100%;">
                     <thead class="table-dark">
                         <tr>
-                            <th style="max-width: 150px;">@Html.DisplayNameFor(model => model.NewsTitle)</th>
-                            <th style="max-width: 120px;">@Html.DisplayNameFor(model => model.Headline)</th>
-                            <th style="max-width: 100px;">@Html.DisplayNameFor(model => model.CreatedDate)</th>
-                            <th style="max-width: 120px;">@Html.DisplayNameFor(model => model.NewsContent)</th>
-                            <th style="max-width: 100px;">@Html.DisplayNameFor(model => model.NewsSource)</th>
-                            <th style="max-width: 80px;">@Html.DisplayNameFor(model => model.NewsStatus)</th>
-                            <th style="max-width: 100px;">@Html.DisplayNameFor(model => model.UpdatedById)</th>
-                            <th style="max-width: 100px;">@Html.DisplayNameFor(model => model.ModifiedDate)</th>
-                            <th style="max-width: 100px;">@Html.DisplayNameFor(model => model.Category)</th>
-                            <th style="max-width: 100px;">@Html.DisplayNameFor(model => model.CreatedBy)</th>
+                            <th style="max-width: 200px;">@Html.DisplayNameFor(model => model.NewsTitle)</th>
+                            <th style="max-width: 150px;">@Html.DisplayNameFor(model => model.Headline)</th>
+                            <th style="max-width: 120px;">@Html.DisplayNameFor(model => model.CreatedDate)</th>
+                            <th style="max-width: 100px;">@Html.DisplayNameFor(model => model.NewsStatus)</th>
                             <th style="width: 150px;">Actions</th>
                         </tr>
                     </thead>
-                    <tbody id="articleTableBody">
+                    <tbody>
                         @foreach (var item in Model)
                         {
                             <tr>
-                                <td class="text-truncate" style="max-width: 150px;" title="@item.NewsTitle">
+                                <td class="text-truncate" style="max-width: 200px;" title="@item.NewsTitle">
                                     @Html.DisplayFor(modelItem => item.NewsTitle)
                                 </td>
-                                <td class="text-truncate" style="max-width: 120px;" title="@item.Headline">
+                                <td class="text-truncate" style="max-width: 150px;" title="@item.Headline">
                                     @Html.DisplayFor(modelItem => item.Headline)
                                 </td>
-                                <td style="max-width: 100px;">
+                                <td style="max-width: 120px;">
                                     @Html.DisplayFor(modelItem => item.CreatedDate, "{0:MMM dd, yyyy}")
                                 </td>
-                                <td class="text-truncate" style="max-width: 120px;" title="@item.NewsContent">
-                                    @Html.Raw(GetShortContent(item.NewsContent, 50))
-                                </td>
-                                <td class="text-truncate" style="max-width: 100px;" title="@item.NewsSource">
-                                    @Html.DisplayFor(modelItem => item.NewsSource)
-                                </td>
-                                <td class="text-truncate" style="max-width: 80px;" title="@item.NewsStatus">
-                                    @Html.DisplayFor(modelItem => item.NewsStatus)
-                                </td>
-                                <td class="text-truncate" style="max-width: 100px;" title="@item.UpdatedById">
-                                    @Html.DisplayFor(modelItem => item.UpdatedById)
-                                </td>
                                 <td style="max-width: 100px;">
-                                    @Html.DisplayFor(modelItem => item.ModifiedDate, "{0:MMM dd, yyyy}")
-                                </td>
-                                <td class="text-truncate" style="max-width: 100px;" title="@item.Category?.CategoryDesciption">
-                                    @Html.DisplayFor(modelItem => item.Category.CategoryDesciption)
-                                </td>
-                                <td class="text-truncate" style="max-width: 100px;" title="@item.CreatedBy?.AccountId">
-                                    @Html.DisplayFor(modelItem => item.CreatedBy.AccountId)
+                                    @Html.DisplayFor(modelItem => item.NewsStatus)
                                 </td>
                                 <td style="width: 150px;">
                                     <a class="btn btn-warning btn-sm me-1" asp-action="Edit" asp-route-id="@item.NewsArticleId">
@@ -112,31 +91,4 @@
 
         return content.Substring(0, maxLength) + "...";
     }
-}
-
-@section Scripts {
-    <script>
-        function searchArticles(query) {
-            console.log("Searching for: " + query);
-            // Placeholder for AJAX call (uncomment and adjust later)
-            /*
-            $.ajax({
-                url: '@Url.Action("Search", "NewsArticles")',
-                type: 'GET',
-                data: { searchTerm: query },
-                success: function (data) {
-                    $('#articleTableBody').html(data);
-                },
-                error: function () {
-                    alert('Error searching articles.');
-                }
-            });
-            */
-        }
-
-        function clearSearch() {
-            $('#searchInput').val('');
-            searchArticles('');
-        }
-    </script>
 }

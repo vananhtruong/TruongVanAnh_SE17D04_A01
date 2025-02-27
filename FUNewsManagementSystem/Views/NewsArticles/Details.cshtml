@@ -38,10 +38,10 @@
                     <dd class="col-sm-8 col-md-9">@Html.DisplayFor(model => model.ModifiedDate)</dd>
 
                     <dt class="col-sm-4 col-md-3 fw-medium"><i class="fas fa-folder-open me-2 text-muted"></i> @Html.DisplayNameFor(model => model.Category)</dt>
-                    <dd class="col-sm-8 col-md-9">@Html.DisplayFor(model => model.Category.CategoryDesciption)</dd>
+                    <dd class="col-sm-8 col-md-9">@Html.DisplayFor(model => model.Category.CategoryName)</dd>
 
                     <dt class="col-sm-4 col-md-3 fw-medium"><i class="fas fa-user me-2 text-muted"></i> @Html.DisplayNameFor(model => model.CreatedBy)</dt>
-                    <dd class="col-sm-8 col-md-9">@Html.DisplayFor(model => model.CreatedBy.AccountId)</dd>
+                    <dd class="col-sm-8 col-md-9">@Html.DisplayFor(model => model.CreatedBy.AccountName)</dd>
                 </dl>
             </section>
 

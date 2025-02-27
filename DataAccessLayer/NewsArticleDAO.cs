@@ -16,14 +16,16 @@ namespace DataAccessLayer
         public async Task<List<NewsArticle>> GetAllActiveNewsArticles()
         {
             return await _context.NewsArticles
-                .Where(na => na.NewsStatus == true)
+                .Where(na => na.NewsStatus == true).Include(c => c.Category).Include(a => a.CreatedBy)
                 .ToListAsync();
         }
 
         // Lấy bài viết theo ID
         public async Task<NewsArticle?> GetNewsArticleById(string newsArticleId)
         {
-            return await _context.NewsArticles.FindAsync(newsArticleId);
+            return await _context.NewsArticles
+                .Include(c => c.Category).Include(a => a.CreatedBy)
+                .FirstOrDefaultAsync(na => na.NewsArticleId == newsArticleId);
         }
 
         // Tạo mới bài viết tin tức
@@ -74,6 +76,20 @@ namespace DataAccessLayer
         public async Task<bool> NewsArticleExists(string id)
         {
             return await _context.NewsArticles.AnyAsync(e => e.NewsArticleId == id);
+        }
+        public async Task<List<NewsArticle>> SearchNewsArticles(string searchString)
+        {
+            if (string.IsNullOrEmpty(searchString))
+                return await _context.NewsArticles.ToListAsync();
+
+            string searchLower = searchString.ToLower();
+            return await _context.NewsArticles
+                .Where(na => na.NewsTitle.ToLower().Contains(searchLower) ||
+                                na.Headline.ToLower().Contains(searchLower) ||
+                                na.NewsContent.ToLower().Contains(searchLower) ||
+                                na.Category.CategoryName.ToLower().Contains(searchLower) ||
+                                na.CreatedBy.AccountName.ToLower().Contains(searchLower))
+                .ToListAsync();
         }
     }
 } 
