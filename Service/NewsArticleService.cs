@@ -22,10 +22,6 @@ namespace Services
         public async Task<NewsArticle?> GetNewsArticleById(string newsArticleId)
         {
             var article = await _newsArticleRepository.GetNewsArticleById(newsArticleId);
-            if (article == null || article.NewsStatus == false)
-            {
-                return null;
-            }
             return article;
         }
 
@@ -44,12 +40,7 @@ namespace Services
 
         public async Task<NewsArticle?> UpdateNewsArticle(NewsArticle newsArticle)
         {
-            var existingArticle = await _newsArticleRepository.GetNewsArticleById(newsArticle.NewsArticleId);
-            if (existingArticle == null || existingArticle.NewsStatus == false)
-            {
-                return null;
-            }
-            existingArticle.ModifiedDate = DateTime.Now;
+            newsArticle.ModifiedDate = DateTime.Now;
             return await _newsArticleRepository.UpdateNewsArticle(newsArticle);
         }
 

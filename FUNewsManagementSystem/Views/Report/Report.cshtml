@@ -1,0 +1,93 @@
+﻿@model IEnumerable<BusinessObjects.Models.NewsArticle>
+
+@{
+    ViewData["Title"] = "Reports";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container mt-5">
+    <h1 class="mb-4">Báo cáo bài viết</h1>
+
+    <!-- Form nhập ngày -->
+    <form method="post" asp-action="GenerateReport" class="mb-4">
+        <div class="row align-items-end">
+            <div class="col-md-3">
+                <label class="form-label">Từ ngày:</label>
+                <input type="date" name="startDate" class="form-control" required />
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Đến ngày:</label>
+                <input type="date" name="endDate" class="form-control" required />
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">Tạo báo cáo</button>
+            </div>
+        </div>
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger mt-3">@TempData["Error"]</div>
+        }
+    </form>
+
+    <!-- Thống kê theo category -->
+    @if (Model != null && Model.Any())
+    {
+        var groupedByCategory = Model.GroupBy(n => n.Category?.CategoryName ?? "Không có danh mục");
+        var totalArticles = Model.Count();
+        var startDate = Model.Min(n => n.CreatedDate)?.ToString("dd/MM/yyyy");
+        var endDate = Model.Max(n => n.CreatedDate)?.ToString("dd/MM/yyyy");
+
+        <div class="card mb-4">
+            <div class="card-header bg-dark text-white">
+                <h4 class="mb-0">Thống kê từ @startDate đến @endDate</h4>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    @foreach (var group in groupedByCategory)
+                    {
+                        <li class="list-group-item">@group.Key: @group.Count() bài báo</li>
+                    }
+                    <li class="list-group-item fw-bold">Tổng cộng: @totalArticles bài báo</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Bảng chi tiết -->
+        <h2 class="mb-3">Danh sách bài viết</h2>
+        <table class="table table-bordered table-striped table-hover text-center">
+            <thead class="table-dark">
+                <tr>
+                    <th>Tiêu đề</th>
+                    <th>Danh mục</th>
+                    <th>Tác giả</th>
+                    <th>Ngày tạo</th>
+                    <th>Modified Date</th>
+                    <th>Trạng thái</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var article in Model)
+                {
+                    <tr>
+                        <td class="text-start">@article.NewsTitle</td>
+                        <td>@(article.Category?.CategoryName ?? "N/A")</td>
+                        <td>@(article.CreatedBy?.AccountName ?? "N/A")</td>
+                        <td>@(article.CreatedDate.HasValue ? article.CreatedDate.Value.ToString("yyyy-MM-dd") : "N/A")</td>
+                        <td>@(article.CreatedDate.HasValue ? article.ModifiedDate.Value.ToString("yyyy-MM-dd") : "N/A")</td>
+                        <td>
+                            <span class="badge @(article.NewsStatus.HasValue && article.NewsStatus.Value ? "bg-success" : "bg-danger")">
+                                @(article.NewsStatus.HasValue ? (article.NewsStatus.Value ? "Active" : "Inactive") : "N/A")
+                            </span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else if (Model != null)
+    {
+        <div class="alert alert-warning" role="alert">
+            Không tìm thấy bài viết nào trong khoảng thời gian đã chọn.
+        </div>
+    }
+</div>
