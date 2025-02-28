@@ -16,7 +16,10 @@ namespace DataAccessLayer
         public async Task<List<NewsArticle>> GetAllActiveNewsArticles()
         {
             return await _context.NewsArticles
-                .Where(na => na.NewsStatus == true).Include(c => c.Category).Include(a => a.CreatedBy)
+                .Where(na => na.NewsStatus == true)
+                .Include(c => c.Category)
+                .Include(a => a.CreatedBy)
+                .Include(t => t.Tags)
                 .ToListAsync();
         }
 
@@ -24,7 +27,7 @@ namespace DataAccessLayer
         public async Task<NewsArticle?> GetNewsArticleById(string newsArticleId)
         {
             return await _context.NewsArticles
-                .Include(c => c.Category).Include(a => a.CreatedBy)
+                .Include(c => c.Category).Include(a => a.CreatedBy).Include(t => t.Tags)
                 .FirstOrDefaultAsync(na => na.NewsArticleId == newsArticleId);
         }
 
@@ -55,7 +58,12 @@ namespace DataAccessLayer
             var newsArticle = await _context.NewsArticles.FindAsync(newsArticleId);
             if (newsArticle != null)
             {
-                _context.NewsArticles.Remove(newsArticle);
+                // Perform a soft delete by setting NewsStatus to false
+                newsArticle.NewsStatus = false;
+                // Optionally update ModifiedDate to reflect the change
+                newsArticle.ModifiedDate = DateTime.Today;
+
+                // Save the changes
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -80,7 +88,7 @@ namespace DataAccessLayer
         public async Task<List<NewsArticle>> NewsArticlesFilter(string searchString, int cateogryId)
         {
             // Lấy tất cả bài viết nếu không có điều kiện nào
-            var query = _context.NewsArticles.AsQueryable();
+            var query = _context.NewsArticles.Include(t => t.Tags).AsQueryable();
 
             // Xử lý searchString
             if (!string.IsNullOrEmpty(searchString))
@@ -104,7 +112,7 @@ namespace DataAccessLayer
         public async Task<List<NewsArticle>> NewsArticlesStaff(string searchString, int cateogryId, int id)
         {
             // Lấy tất cả bài viết nếu không có điều kiện nào
-            var query = _context.NewsArticles.AsQueryable();
+            var query = _context.NewsArticles.Include(t => t.Tags).AsQueryable();
 
             // Xử lý searchString
             if (!string.IsNullOrEmpty(searchString))

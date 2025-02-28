@@ -15,6 +15,27 @@
             <form asp-action="Create" method="post">
                 <div asp-validation-summary="ModelOnly" class="text-danger mb-4"></div>
 
+                <!-- Hiển thị lỗi validation nếu có -->
+                @if (ViewData["ValidationErrors"] != null)
+                {
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach (var error in (IEnumerable<dynamic>)ViewData["ValidationErrors"])
+                            {
+                                <li>@error.Field: @error.ErrorMessage</li>
+                            }
+                        </ul>
+                    </div>
+                }
+
+                <!-- Các trường ẩn -->
+                <input type="hidden" asp-for="NewsArticleId" value="@Model.NewsArticleId"/>
+                <input type="hidden" asp-for="NewsStatus" value="true" />
+                <input type="hidden" asp-for="CreatedDate" value="@Model.CreatedDate?.ToString("yyyy-MM-dd")" />
+                <input type="hidden" asp-for="ModifiedDate" value="@Model.ModifiedDate?.ToString("yyyy-MM-dd")" />
+                <input type="hidden" asp-for="CreatedById" value="@Model.CreatedById" />
+                <input type="hidden" asp-for="UpdatedById" value="@Model.UpdatedById" />
+
                 <div class="row g-3">
                     <!-- News Title -->
                     <div class="col-md-12">
@@ -38,20 +59,12 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <label asp-for="NewsContent" class="form-label fw-bold">News Content</label>
-                            <textarea asp-for="NewsContent" class="form-control" rows="10"
-                                      style="resize: vertical;" placeholder="Enter the news content here..."></textarea>
+                            <textarea asp-for="NewsContent" class="form-control" rows="10" style="resize: vertical;" placeholder="Enter the news content here..."></textarea>
                             <span asp-validation-for="NewsContent" class="text-danger"></span>
                         </div>
                     </div>
 
-                    <!-- Row for smaller fields -->
-                    <div class="col-md-6">
-                        <div class="form-floating">
-                            <input asp-for="CreatedDate" class="form-control" type="date" />
-                            <label asp-for="CreatedDate" class="form-label">Created Date</label>
-                            <span asp-validation-for="CreatedDate" class="text-danger"></span>
-                        </div>
-                    </div>
+                    <!-- News Source -->
                     <div class="col-md-6">
                         <div class="form-floating">
                             <input asp-for="NewsSource" class="form-control" placeholder="Enter source" />
@@ -60,48 +73,24 @@
                         </div>
                     </div>
 
-                    <!-- Category and Status -->
+                    <!-- Category -->
                     <div class="col-md-6">
                         <div class="form-floating">
-                            <select asp-for="CategoryId" class="form-select" asp-items="ViewBag.CategoryId">
+                            <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.CategoryId">
                                 <option value="">Select a category</option>
                             </select>
                             <label asp-for="CategoryId" class="form-label">Category</label>
                             <span asp-validation-for="CategoryId" class="text-danger"></span>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-floating">
-                            <input asp-for="NewsStatus" class="form-control" placeholder="Enter status" />
-                            <label asp-for="NewsStatus" class="form-label">News Status</label>
-                            <span asp-validation-for="NewsStatus" class="text-danger"></span>
-                        </div>
-                    </div>
 
-                    <!-- CreatedBy and UpdatedBy -->
-                    <div class="col-md-6">
-                        <div class="form-floating">
-                            <select asp-for="CreatedById" class="form-select" asp-items="ViewBag.CreatedById">
-                                <option value="">Select creator</option>
+                    <!-- Tags -->
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="form-label fw-bold">Tags</label>
+                            <select name="selectedTags" class="form-control" multiple asp-items="ViewBag.Tags" style="height: 150px;">
                             </select>
-                            <label asp-for="CreatedById" class="form-label">Created By</label>
-                            <span asp-validation-for="CreatedById" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-floating">
-                            <input asp-for="UpdatedById" class="form-control" placeholder="Enter updater ID" />
-                            <label asp-for="UpdatedById" class="form-label">Updated By ID</label>
-                            <span asp-validation-for="UpdatedById" class="text-danger"></span>
-                        </div>
-                    </div>
-
-                    <!-- Modified Date -->
-                    <div class="col-md-6">
-                        <div class="form-floating">
-                            <input asp-for="ModifiedDate" class="form-control" type="date" />
-                            <label asp-for="ModifiedDate" class="form-label">Modified Date</label>
-                            <span asp-validation-for="ModifiedDate" class="text-danger"></span>
+                            <small class="text-muted">Hold Ctrl (Windows) or Cmd (Mac) to select multiple tags</small>
                         </div>
                     </div>
                 </div>
@@ -119,6 +108,13 @@
         </div>
     </div>
 </div>
+
+<style>
+    select[multiple] {
+        padding: 10px;
+        border-radius: 5px;
+    }
+</style>
 
 @section Scripts {
     @{

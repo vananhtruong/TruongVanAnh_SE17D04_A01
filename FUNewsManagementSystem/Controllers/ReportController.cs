@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FUNewsManagementSystem.Filters;
+using Microsoft.AspNetCore.Mvc;
 using Service.Interfaces;
 
 namespace FUNewsManagementSystem.Controllers
 {
+    [AuthorizeRole("Admin")]
     public class ReportController : Controller
     {
         private readonly IReportService _reportService;

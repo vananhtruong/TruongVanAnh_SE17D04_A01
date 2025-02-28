@@ -97,6 +97,41 @@
                     </tbody>
                 </table>
             </div>
+
+            <!-- Pagination -->
+            <nav aria-label="Page navigation" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item @(ViewBag.PageNumber == 1 ? "disabled" : "")">
+                        <a class="page-link" asp-action="Index"
+                           asp-route-pageNumber="@(ViewBag.PageNumber - 1)"
+                           asp-route-pageSize="@ViewBag.PageSize"
+                           asp-route-searchString="@ViewData["CurrentFilter"]"
+                           asp-route-categoryId="@ViewBag.CategoryId"
+                           asp-route-createdByMe="@ViewData["CreatedByMe"]">Previous</a>
+                    </li>
+
+                    @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                    {
+                        <li class="page-item @(i == ViewBag.PageNumber ? "active" : "")">
+                            <a class="page-link" asp-action="Index"
+                               asp-route-pageNumber="@i"
+                               asp-route-pageSize="@ViewBag.PageSize"
+                               asp-route-searchString="@ViewData["CurrentFilter"]"
+                               asp-route-categoryId="@ViewBag.CategoryId"
+                               asp-route-createdByMe="@ViewData["CreatedByMe"]">@i</a>
+                        </li>
+                    }
+
+                    <li class="page-item @(ViewBag.PageNumber == ViewBag.TotalPages ? "disabled" : "")">
+                        <a class="page-link" asp-action="Index"
+                           asp-route-pageNumber="@(ViewBag.PageNumber + 1)"
+                           asp-route-pageSize="@ViewBag.PageSize"
+                           asp-route-searchString="@ViewData["CurrentFilter"]"
+                           asp-route-categoryId="@ViewBag.CategoryId"
+                           asp-route-createdByMe="@ViewData["CreatedByMe"]">Next</a>
+                    </li>
+                </ul>
+            </nav>
         </div>
     </div>
 </div>

@@ -61,5 +61,11 @@ namespace DataAccessLayer
         {
             return _context.Tags.Any(e => e.TagId == id);
         }
+        public async Task<List<Tag>> GetTagsByIdsAsync(int[] selectedTagIds)
+        {
+            return await _context.Tags
+                .Where(t => selectedTagIds.Contains(t.TagId))
+                .ToListAsync();
+        }
     }
 }

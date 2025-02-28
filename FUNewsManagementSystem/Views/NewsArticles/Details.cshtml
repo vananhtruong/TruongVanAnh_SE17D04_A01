@@ -42,6 +42,21 @@
 
                     <dt class="col-sm-4 col-md-3 fw-medium"><i class="fas fa-user me-2 text-muted"></i> @Html.DisplayNameFor(model => model.CreatedBy)</dt>
                     <dd class="col-sm-8 col-md-9">@Html.DisplayFor(model => model.CreatedBy.AccountName)</dd>
+
+                    <dt class="col-sm-4 col-md-3 fw-medium"><i class="fas fa-tags me-2 text-muted"></i> Tags</dt>
+                    <dd class="col-sm-8 col-md-9">
+                        @if (Model.Tags != null && Model.Tags.Any())
+                        {
+                            foreach (var tag in Model.Tags)
+                            {
+                                <span class="badge bg-primary me-1 mb-1">@Html.DisplayFor(modelItem => tag.TagName)</span>
+                            }
+                        }
+                        else
+                        {
+                            <span class="text-muted">No tags assigned</span>
+                        }
+                    </dd>
                 </dl>
             </section>
 
@@ -107,6 +122,11 @@
     hr {
         border-color: #dee2e6;
         opacity: 0.5;
+    }
+
+    .badge {
+        padding: 0.35em 0.65em;
+        font-size: 0.85em;
     }
 </style>
 

@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BusinessObjects.Models;
 using Services.Interfaces;
+using FUNewsManagementSystem.Filters;
 
 namespace FUNewsManagementSystem.Controllers
 {
+    [AuthorizeRole("Staff")]
     public class CategoriesController : Controller
     {
         private readonly FunewsManagementContext _context;
