@@ -11,7 +11,7 @@
             <h1 class="h3 mb-0 fw-bold">News Articles</h1>
         </div>
         <div class="card-body p-4">
-            <!-- Search and Buttons -->
+            <!-- Search and Buttons (unchanged) -->
             <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
                 <form class="input-group" style="max-width: 600px;" asp-action="Index" method="get">
                     <select name="categoryId" class="form-select" style="max-width: 200px;" asp-items="@((SelectList)ViewData["CategoryId"])">
@@ -22,7 +22,6 @@
                     </span>
                     <input type="text" id="searchInput" name="searchString" class="form-control"
                            placeholder="Search articles..." value="@ViewData["CurrentFilter"]">
-                    <!-- Checkbox Created by Me -->
                     <div class="input-group-text bg-light border-0">
                         <input type="checkbox" id="createdByMe" name="createdByMe" value="true"
                         @(ViewData["CreatedByMe"] != null && (bool)ViewData["CreatedByMe"] ? "checked" : "")>
@@ -33,11 +32,7 @@
                     </button>
                 </form>
                 <div class="d-flex gap-2">
-                    <a class="btn btn-outline-secondary"
-                       asp-action="Index"
-                       asp-route-searchString=""
-                       asp-route-categoryId=""
-                       asp-route-createdByMe="">
+                    <a class="btn btn-outline-secondary" asp-action="Index" asp-route-searchString="" asp-route-categoryId="" asp-route-createdByMe="">
                         Clear Search
                     </a>
                     <a class="btn btn-success" asp-action="Create">
@@ -46,15 +41,27 @@
                 </div>
             </div>
 
-            <!-- Table -->
+            <!-- Table with sortable headers -->
             <div class="table-responsive">
-                <table class="table table-striped table-hover table-bordered" style="width: 100%;">
+                <table class="table table-striped table-hover table-bordered" id="newsTable" style="width: 100%;">
                     <thead class="table-dark">
                         <tr>
-                            <th style="max-width: 200px;">@Html.DisplayNameFor(model => model.NewsTitle)</th>
-                            <th style="max-width: 150px;">@Html.DisplayNameFor(model => model.Headline)</th>
-                            <th style="max-width: 120px;">@Html.DisplayNameFor(model => model.CreatedDate)</th>
-                            <th style="max-width: 100px;">@Html.DisplayNameFor(model => model.NewsStatus)</th>
+                            <th class="sortable" data-column="0" style="max-width: 200px; cursor: pointer;">
+                                @Html.DisplayNameFor(model => model.NewsTitle)
+                                <span class="sort-icon"></span>
+                            </th>
+                            <th class="sortable" data-column="1" style="max-width: 150px; cursor: pointer;">
+                                @Html.DisplayNameFor(model => model.Headline)
+                                <span class="sort-icon"></span>
+                            </th>
+                            <th class="sortable" data-column="2" style="max-width: 120px; cursor: pointer;">
+                                @Html.DisplayNameFor(model => model.CreatedDate)
+                                <span class="sort-icon"></span>
+                            </th>
+                            <th class="sortable" data-column="3" style="max-width: 100px; cursor: pointer;">
+                                @Html.DisplayNameFor(model => model.NewsStatus)
+                                <span class="sort-icon"></span>
+                            </th>
                             <th style="width: 150px;">Actions</th>
                         </tr>
                     </thead>
@@ -68,26 +75,20 @@
                                 <td class="text-truncate" style="max-width: 150px;" title="@item.Headline">
                                     @Html.DisplayFor(modelItem => item.Headline)
                                 </td>
-                                <td style="max-width: 120px;">
+                                <td style="max-width: 120px;" data-date="@item.CreatedDate?.ToString("yyyy-MM-dd")">
                                     @Html.DisplayFor(modelItem => item.CreatedDate, "{0:MMM dd, yyyy}")
                                 </td>
                                 <td style="max-width: 100px;">
                                     @Html.DisplayFor(modelItem => item.NewsStatus)
                                 </td>
                                 <td style="width: 150px;">
-                                    <a class="btn btn-warning btn-sm me-1"
-                                       asp-action="Edit"
-                                       asp-route-id="@item.NewsArticleId">
+                                    <a class="btn btn-warning btn-sm me-1" asp-action="Edit" asp-route-id="@item.NewsArticleId">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <a class="btn btn-info btn-sm me-1"
-                                       asp-action="Details"
-                                       asp-route-id="@item.NewsArticleId">
+                                    <a class="btn btn-info btn-sm me-1" asp-action="Details" asp-route-id="@item.NewsArticleId">
                                         <i class="fas fa-info-circle"></i>
                                     </a>
-                                    <a class="btn btn-danger btn-sm"
-                                       asp-action="Delete"
-                                       asp-route-id="@item.NewsArticleId"
+                                    <a class="btn btn-danger btn-sm" asp-action="Delete" asp-route-id="@item.NewsArticleId"
                                        onclick="return confirm('Are you sure you want to delete this item?');">
                                         <i class="fas fa-trash"></i>
                                     </a>
@@ -98,7 +99,7 @@
                 </table>
             </div>
 
-            <!-- Pagination -->
+            <!-- Pagination (unchanged) -->
             <nav aria-label="Page navigation" class="mt-4">
                 <ul class="pagination justify-content-center">
                     <li class="page-item @(ViewBag.PageNumber == 1 ? "disabled" : "")">
@@ -109,7 +110,6 @@
                            asp-route-categoryId="@ViewBag.CategoryId"
                            asp-route-createdByMe="@ViewData["CreatedByMe"]">Previous</a>
                     </li>
-
                     @for (int i = 1; i <= ViewBag.TotalPages; i++)
                     {
                         <li class="page-item @(i == ViewBag.PageNumber ? "active" : "")">
@@ -121,7 +121,6 @@
                                asp-route-createdByMe="@ViewData["CreatedByMe"]">@i</a>
                         </li>
                     }
-
                     <li class="page-item @(ViewBag.PageNumber == ViewBag.TotalPages ? "disabled" : "")">
                         <a class="page-link" asp-action="Index"
                            asp-route-pageNumber="@(ViewBag.PageNumber + 1)"
@@ -135,6 +134,79 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const table = document.getElementById('newsTable');
+            const headers = table.querySelectorAll('.sortable');
+            let sortDirection = 1;
+            let lastSortedColumn = -1;
+
+            headers.forEach(header => {
+                header.addEventListener('click', () => {
+                    const columnIndex = parseInt(header.getAttribute('data-column'));
+                    const isSameColumn = lastSortedColumn === columnIndex;
+
+                    // Toggle sort direction if clicking the same column
+                    sortDirection = isSameColumn ? -sortDirection : 1;
+                    lastSortedColumn = columnIndex;
+
+                    // Update sort icons
+                    headers.forEach(h => {
+                        const icon = h.querySelector('.sort-icon');
+                        icon.innerHTML = '';
+                        if (h === header) {
+                            icon.innerHTML = sortDirection === 1 ? '↑' : '↓';
+                        }
+                    });
+
+                    sortTable(columnIndex);
+                });
+            });
+
+            function sortTable(columnIndex) {
+                const tbody = table.querySelector('tbody');
+                const rows = Array.from(tbody.querySelectorAll('tr'));
+
+                rows.sort((a, b) => {
+                    let aValue = a.cells[columnIndex].textContent.trim();
+                    let bValue = b.cells[columnIndex].textContent.trim();
+
+                    // Special handling for date column (index 2)
+                    if (columnIndex === 2) {
+                        aValue = a.cells[columnIndex].getAttribute('data-date') || aValue;
+                        bValue = b.cells[columnIndex].getAttribute('data-date') || bValue;
+                        return sortDirection * (new Date(aValue) - new Date(bValue));
+                    }
+                    // Special handling for status column (index 3 - boolean)
+                    else if (columnIndex === 3) {
+                        aValue = aValue.toLowerCase() === 'true' ? 1 : 0;
+                        bValue = bValue.toLowerCase() === 'true' ? 1 : 0;
+                        return sortDirection * (aValue - bValue);
+                    }
+                    // Default string comparison
+                    return sortDirection * aValue.localeCompare(bValue);
+                });
+
+                // Re-append sorted rows
+                rows.forEach(row => tbody.appendChild(row));
+            }
+        });
+    </script>
+
+    <style>
+        .sortable:hover {
+            background-color: #343a40;
+        }
+
+        .sort-icon {
+            float: right;
+            width: 20px;
+            text-align: center;
+        }
+    </style>
+}
 
 @functions {
     public string GetShortContent(string content, int maxLength)
