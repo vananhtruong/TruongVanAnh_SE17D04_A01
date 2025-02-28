@@ -72,13 +72,16 @@ namespace Services
             bool isAdmin = _systemAccountRepository.CheckAdminSystemAccount(accountLogin.AccountEmail, accountLogin.AccountPassword);
             bool checkEmail = await _systemAccountRepository.IsEmailExit(accountLogin.AccountEmail);
             if (!checkEmail && !isAdmin)
-            {
+            {   
                 message = "Email không tồn tại!";
                 return (0, message);
             }
             if (isAdmin)
             {
-                 
+                var adminEmail = _configuration["AccountAdmin:Email"];
+
+                httpContext.Session.SetString("UserEmail", adminEmail); // Dùng email từ config
+                httpContext.Session.SetString("UserRole", "Admin");
                 return (3, message);
             }
             else
