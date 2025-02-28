@@ -18,6 +18,7 @@ namespace FUNewsManagementSystem.Controllers
         private readonly ICategoryService _categoryService;
         private readonly ISystemAccountService _systemAccountService;
         private readonly ITagService _tagService;
+
         public NewsArticlesController(INewsArticleService newsArticleService, ICategoryService categoryService, ISystemAccountService systemAccountService, ITagService tagService)
         {
             _newsArticleService = newsArticleService;
@@ -26,7 +27,6 @@ namespace FUNewsManagementSystem.Controllers
             _tagService = tagService;
         }
 
-        // GET: NewsArticles
         // GET: NewsArticles
         public async Task<IActionResult> Index(string searchString, int? categoryId, bool createdByMe, int pageNumber = 1, int pageSize = 10)
         {
@@ -42,20 +42,17 @@ namespace FUNewsManagementSystem.Controllers
             ViewData["CategoryId"] = new SelectList(categories, "CategoryId", "CategoryName", categoryId);
             ViewData["CreatedByMe"] = createdByMe;
 
-            // Lấy danh sách bài viết
             var newsArticles = await _newsArticleService.NewsArticlesStaff(
                 searchString,
                 categoryId ?? 0,
                 systemAccount?.AccountId ?? 0);
 
-            // Tính toán phân trang
             int totalItems = newsArticles.Count();
             var pagedArticles = newsArticles
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToList();
 
-            // Truyền thông tin phân trang vào ViewBag
             ViewBag.TotalItems = totalItems;
             ViewBag.PageNumber = pageNumber;
             ViewBag.PageSize = pageSize;
@@ -88,13 +85,7 @@ namespace FUNewsManagementSystem.Controllers
             var systemAccounts = await _systemAccountService.SystemAccounts();
             var tags = await _tagService.GetAllTags();
 
-            // Lấy email từ session và tìm account
             string userEmail = HttpContext.Session.GetString("UserEmail");
-            var message = "";
-            if (string.IsNullOrEmpty(userEmail))
-            {
-                message = "User email not found in session.";
-            }
             var account = await _systemAccountService.GetSystemAccountByEmail(userEmail);
 
             ViewData["CategoryId"] = new SelectList(categories, "CategoryId", "CategoryName");
@@ -106,7 +97,7 @@ namespace FUNewsManagementSystem.Controllers
             do
             {
                 newId = rand.Next(-32768, 32768).ToString();
-            } while (await NewsArticleExists(newId)); 
+            } while (await NewsArticleExists(newId));
 
             return View(new NewsArticle
             {
@@ -119,41 +110,22 @@ namespace FUNewsManagementSystem.Controllers
             });
         }
 
+        // POST: NewsArticles/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
-    [Bind("NewsArticleId,NewsTitle,Headline,NewsContent,NewsSource,CategoryId")]
-    NewsArticle newsArticle,
-    int[] selectedTags)
+            [Bind("NewsArticleId,NewsTitle,Headline,NewsContent,NewsSource,CategoryId")]
+            NewsArticle newsArticle,
+            int[] selectedTags)
         {
-            // Lấy email từ session và tìm account
             string userEmail = HttpContext.Session.GetString("UserEmail");
-            var message = "";
-            if (string.IsNullOrEmpty(userEmail))
-            {
-                message = "User email not found in session.";
-            }
             var account = await _systemAccountService.GetSystemAccountByEmail(userEmail);
 
-            // Gán các giá trị mặc định (chỉ nếu cần thiết, không ghi đè NewsArticleId từ form)
             newsArticle.NewsStatus = true;
             newsArticle.CreatedDate = DateTime.Today;
             newsArticle.ModifiedDate = DateTime.Today;
             newsArticle.CreatedById = account?.AccountId ?? 0;
             newsArticle.UpdatedById = account?.AccountId;
-
-            if (!ModelState.IsValid)
-            {
-                var errors = ModelState
-                    .Where(x => x.Value.Errors.Count > 0)
-                    .Select(x => new
-                    {
-                        Field = x.Key,
-                        ErrorMessage = x.Value.Errors.FirstOrDefault()?.ErrorMessage
-                    })
-                    .ToList();
-                ViewData["ValidationErrors"] = errors;
-            }
 
             if (ModelState.IsValid)
             {
@@ -174,6 +146,7 @@ namespace FUNewsManagementSystem.Controllers
             ViewData["Tags"] = new MultiSelectList(tags, "TagId", "TagName", selectedTags);
             return View(newsArticle);
         }
+
         // GET: NewsArticles/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
@@ -187,35 +160,62 @@ namespace FUNewsManagementSystem.Controllers
             {
                 return NotFound();
             }
+
             var categories = await _categoryService.GetAllCategories();
             var systemAccounts = await _systemAccountService.SystemAccounts();
+            var tags = await _tagService.GetAllTags();
+            var selectedTagIds = newsArticle.Tags?.Select(t => t.TagId).ToArray() ?? new int[0];
+
+            string userEmail = HttpContext.Session.GetString("UserEmail");
+            var account = await _systemAccountService.GetSystemAccountByEmail(userEmail);
+
             ViewData["CategoryId"] = new SelectList(categories, "CategoryId", "CategoryName", newsArticle.CategoryId);
             ViewData["CreatedById"] = new SelectList(systemAccounts, "AccountId", "AccountId", newsArticle.CreatedById);
+            ViewData["Tags"] = new MultiSelectList(tags, "TagId", "TagName", selectedTagIds);
+
+            newsArticle.UpdatedById = account?.AccountId; // Cập nhật UpdatedById
+            newsArticle.ModifiedDate = DateTime.Today;    // Cập nhật ModifiedDate
+
             return View(newsArticle);
         }
 
-        // POST: NewsArticles/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("NewsArticleId,NewsTitle,Headline,CreatedDate,NewsContent,NewsSource,CategoryId,NewsStatus,CreatedById,UpdatedById,ModifiedDate")] NewsArticle newsArticle)
+        public async Task<IActionResult> Edit(string id,
+    [Bind("NewsArticleId,NewsTitle,Headline,CreatedDate,NewsContent,NewsSource,CategoryId,NewsStatus,CreatedById,UpdatedById,ModifiedDate")]
+    NewsArticle newsArticle,
+    int[] selectedTags)
         {
             if (id != newsArticle.NewsArticleId)
             {
                 return NotFound();
             }
 
+            string userEmail = HttpContext.Session.GetString("UserEmail");
+            var account = await _systemAccountService.GetSystemAccountByEmail(userEmail);
+
+            newsArticle.UpdatedById = account?.AccountId; // Cập nhật UpdatedById
+            newsArticle.ModifiedDate = DateTime.Today;    // Cập nhật ModifiedDate
+
             if (ModelState.IsValid)
             {
                 try
                 {
+                    // Cập nhật tags
+                    if (selectedTags != null && selectedTags.Any())
+                    {
+                        newsArticle.Tags = await _tagService.GetTagsByIdsAsync(selectedTags);
+                    }
+                    else
+                    {
+                        newsArticle.Tags = new List<Tag>(); // Nếu không chọn tag nào thì xóa hết tags
+                    }
+
                     await _newsArticleService.UpdateNewsArticle(newsArticle);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    var exists = await NewsArticleExists(newsArticle.NewsArticleId);
-                    if (!exists)
+                    if (!await NewsArticleExists(newsArticle.NewsArticleId))
                     {
                         return NotFound();
                     }
@@ -226,10 +226,16 @@ namespace FUNewsManagementSystem.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+
             var categories = await _categoryService.GetAllCategories();
             var systemAccounts = await _systemAccountService.SystemAccounts();
+            var tags = await _tagService.GetAllTags();
+            var currentTagIds = selectedTags.Any() ? selectedTags : newsArticle.Tags?.Select(t => t.TagId).ToArray() ?? new int[0];
+
             ViewData["CategoryId"] = new SelectList(categories, "CategoryId", "CategoryName", newsArticle.CategoryId);
             ViewData["CreatedById"] = new SelectList(systemAccounts, "AccountId", "AccountId", newsArticle.CreatedById);
+            ViewData["Tags"] = new MultiSelectList(tags, "TagId", "TagName", currentTagIds);
+
             return View(newsArticle);
         }
 

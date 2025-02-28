@@ -42,10 +42,36 @@ namespace DataAccessLayer
         // Cập nhật bài viết tin tức
         public async Task<NewsArticle?> UpdateNewsArticle(NewsArticle newsArticle)
         {
-            var existingArticle = await _context.NewsArticles.FindAsync(newsArticle.NewsArticleId);
+            var existingArticle = await _context.NewsArticles
+                .Include(na => na.Tags) // Nạp danh sách Tags hiện tại
+                .FirstOrDefaultAsync(na => na.NewsArticleId == newsArticle.NewsArticleId);
+
             if (existingArticle != null)
             {
+                // Cập nhật các thuộc tính cơ bản
                 _context.Entry(existingArticle).CurrentValues.SetValues(newsArticle);
+
+                // Xử lý Tags
+                if (newsArticle.Tags != null)
+                {
+                    // Xóa các tag cũ trong bảng trung gian
+                    existingArticle.Tags.Clear();
+
+                    // Thêm các tag mới từ danh sách Tags của newsArticle
+                    foreach (var tag in newsArticle.Tags)
+                    {
+                        var tagToAdd = await _context.Tags.FindAsync(tag.TagId);
+                        if (tagToAdd != null)
+                        {
+                            existingArticle.Tags.Add(tagToAdd);
+                        }
+                    }
+                }
+
+                // Cập nhật ModifiedDate
+                existingArticle.ModifiedDate = DateTime.Now;
+
+                // Lưu thay đổi
                 await _context.SaveChangesAsync();
                 return existingArticle;
             }
