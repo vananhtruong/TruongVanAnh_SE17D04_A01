@@ -56,5 +56,9 @@ namespace Services
         {
             return _tagRepository.TagExists(id);
         }
+        public async Task<List<Tag>> GetTagsByIdsAsync(int[] selectedTagIds)
+        {
+            return await _tagRepository.GetTagsByIdsAsync(selectedTagIds);
+        }
     }
 }

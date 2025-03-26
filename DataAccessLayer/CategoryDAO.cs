@@ -47,17 +47,31 @@ namespace DataAccessLayer
             return null;
         }
 
-        // Xóa danh mục (kiểm tra không liên quan đến bài viết tin tức)
         public async Task<bool> DeleteCategory(short categoryId)
         {
             var category = await _context.Categories.FindAsync(categoryId);
-            if (category != null && !_context.NewsArticles.Any(na => na.CategoryId == categoryId))
+            if (category == null)
+            {
+                return false;
+            }
+
+            bool hasNewsArticles = _context.NewsArticles.Any(na => na.CategoryId == categoryId);
+
+            // Kiểm tra xem category có phải là parent category của category nào khác không
+            bool isParentCategory = _context.Categories.Any(c => c.ParentCategoryId == categoryId);
+
+            if (hasNewsArticles || isParentCategory)
+            {
+                category.IsActive = false;
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            else
             {
                 _context.Categories.Remove(category);
                 await _context.SaveChangesAsync();
                 return true;
             }
-            return false;
         }
         public bool CategoryExists(short id)
         {

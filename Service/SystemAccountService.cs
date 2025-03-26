@@ -24,7 +24,6 @@ namespace Services
 
         public async Task<SystemAccount> AuthenticateUser(string email, string password)
         {
-            // Logic xác thực người dùng (ví dụ: kiểm tra email và password)
             var account = await _systemAccountRepository.GetSystemAccount(email, password);
             if (account == null)
             {
@@ -72,13 +71,16 @@ namespace Services
             bool isAdmin = _systemAccountRepository.CheckAdminSystemAccount(accountLogin.AccountEmail, accountLogin.AccountPassword);
             bool checkEmail = await _systemAccountRepository.IsEmailExit(accountLogin.AccountEmail);
             if (!checkEmail && !isAdmin)
-            {
+            {   
                 message = "Email không tồn tại!";
                 return (0, message);
             }
             if (isAdmin)
             {
-                 
+                var adminEmail = _configuration["AccountAdmin:Email"];
+
+                httpContext.Session.SetString("UserEmail", adminEmail); // Dùng email từ config
+                httpContext.Session.SetString("UserRole", "Admin");
                 return (3, message);
             }
             else
@@ -110,17 +112,78 @@ namespace Services
         {
             var roleSection = _configuration.GetSection("AccountRole");
 
-            // Lấy tất cả các cặp key-value trong section "AccountRole"
             foreach (var child in roleSection.GetChildren())
             {
-                // Lấy giá trị (value) dưới dạng int từ config
                 if (int.TryParse(child.Value, out int roleValue) && roleValue == role)
                 {
-                    return child.Key; // Trả về tên vai trò (key)
+                    return child.Key;
                 }
             }
 
-            return "Unknown"; // Trả về "Unknown" nếu không tìm thấy
+            return "Unknown"; 
         }
+        public async Task<(SystemAccount account, string role)> HandleGoogleLogin(string email, string name, HttpContext httpContext)
+        {
+            if (string.IsNullOrEmpty(email))
+            {
+                throw new ArgumentException("Email không hợp lệ.");
+            }
+
+            var account = await _systemAccountRepository.GetSystemAccountByEmail(email);
+            if (account == null)
+            {
+                Random random = new Random();
+                short newAccountId;
+                int maxAttempts = 10;
+                int attempts = 0;
+
+                do
+                {
+                    if (attempts >= maxAttempts)
+                    {
+                        throw new Exception("Không thể tạo AccountId duy nhất sau nhiều lần thử.");
+                    }
+                    newAccountId = (short)random.Next(1000, 2000);
+                    attempts++;
+                } while (await _systemAccountRepository.SystemAccountExists(newAccountId));
+
+                account = new SystemAccount
+                {
+                    AccountId = newAccountId,
+                    AccountEmail = email,
+                    AccountName = name ?? email.Split('@')[0], // Sử dụng tên từ Google hoặc phần đầu của email
+                    AccountRole = 2, // Role mặc định là Lecturer
+                    AccountPassword = null // Không cần mật khẩu cho đăng nhập bằng Google
+                };
+
+                await _systemAccountRepository.CreateSystemAccount(account);
+            }
+
+            string role = GetRole1(account.AccountRole ?? 0);
+
+            httpContext.Session.SetString("UserEmail", account.AccountEmail);
+            httpContext.Session.SetString("UserRole", role);
+            httpContext.Session.SetString("UserName", account.AccountName);
+
+            return (account, role);
+        }
+
+        private string GetRole1(int role)
+        {
+            var roleSection = _configuration.GetSection("AccountRole");
+            foreach (var child in roleSection.GetChildren())
+            {
+                if (int.TryParse(child.Value, out int roleValue) && roleValue == role)
+                {
+                    return child.Key;
+                }
+            }
+            return "Unknown";
+        }
+        public async Task<SystemAccount> GetSystemAccount(string email, string pass)
+        {
+            return await _systemAccountRepository.GetSystemAccount(email, pass);
+        }
+
     }
 }

@@ -17,7 +17,7 @@ namespace Services
         public async Task<List<Category>> GetAllCategories()
         {
             var categories = await _categoryRepository.GetAllCategories();
-            return categories.Where(c => c.IsActive == true).ToList(); // Chỉ trả về danh mục hoạt động
+            return categories; 
         }
 
         public async Task<Category?> GetCategoryById(short categoryId)
@@ -54,17 +54,6 @@ namespace Services
 
         public async Task<bool> DeleteCategory(short categoryId)
         {
-            var category = await _categoryRepository.GetCategoryById(categoryId);
-            if (category == null || category.IsActive == false)
-            {
-                return false;
-            }
-            // Kiểm tra xem danh mục có liên quan đến bài viết tin tức không
-            var categories = await _categoryRepository.GetAllCategories();
-            if (categories.Any(c => c.ParentCategoryId == categoryId))
-            {
-                throw new InvalidOperationException("Cannot delete category with subcategories.");
-            }
             return await _categoryRepository.DeleteCategory(categoryId);
         }
         public bool CategoryExists(short id)

@@ -22,21 +22,16 @@ namespace Services
         public async Task<NewsArticle?> GetNewsArticleById(string newsArticleId)
         {
             var article = await _newsArticleRepository.GetNewsArticleById(newsArticleId);
-            if (article == null || article.NewsStatus == false)
-            {
-                return null;
-            }
             return article;
         }
 
         public async Task<NewsArticle> CreateNewsArticle(NewsArticle newsArticle)
         {
-            // Kiểm tra logic kinh doanh (ví dụ: Headline và NewsTitle không được rỗng)
             if (string.IsNullOrEmpty(newsArticle.Headline) || string.IsNullOrEmpty(newsArticle.NewsTitle))
             {
                 throw new ArgumentException("Headline and NewsTitle are required.");
             }
-            newsArticle.NewsStatus = true; // Mặc định bài viết mới là hoạt động
+            newsArticle.NewsStatus = false; 
             newsArticle.CreatedDate = DateTime.Now;
             newsArticle.ModifiedDate = DateTime.Now;
             return await _newsArticleRepository.CreateNewsArticle(newsArticle);
@@ -44,12 +39,7 @@ namespace Services
 
         public async Task<NewsArticle?> UpdateNewsArticle(NewsArticle newsArticle)
         {
-            var existingArticle = await _newsArticleRepository.GetNewsArticleById(newsArticle.NewsArticleId);
-            if (existingArticle == null || existingArticle.NewsStatus == false)
-            {
-                return null;
-            }
-            existingArticle.ModifiedDate = DateTime.Now;
+            newsArticle.ModifiedDate = DateTime.Now;
             return await _newsArticleRepository.UpdateNewsArticle(newsArticle);
         }
 

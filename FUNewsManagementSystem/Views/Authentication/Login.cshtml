@@ -1,16 +1,15 @@
-﻿<!-- Corrected View -->
-@model BusinessObjects.Models.SystemAccount
+﻿@model BusinessObjects.Models.SystemAccount
 
 @{
     Layout = null;
 }
 
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đăng nhập</title>
+    <title>Login</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -69,10 +68,44 @@
                     background-color: #0056b3;
                 }
 
+            .login-container .google-btn {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: #fff;
+                color: #757575;
+                border: 1px solid #dadce0;
+                padding: 0;
+                margin-top: 10px;
+                font-family: 'Roboto', sans-serif;
+                font-size: 14px;
+                font-weight: 500;
+                height: 40px;
+                transition: box-shadow 0.3s ease, background-color 0.3s ease;
+            }
+
+                .login-container .google-btn:hover {
+                    background-color: #f8f9fa;
+                    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+                }
+
+                .login-container .google-btn .google-icon {
+                    width: 18px;
+                    height: 18px;
+                    margin-right: 10px;
+                    background: url('https://developers.google.com/identity/images/g-logo.png') no-repeat center;
+                    background-size: contain;
+                }
+
         .validation-summary-errors {
             color: red;
             margin-bottom: 10px;
+            list-style: none;
         }
+
+            .validation-summary-errors::marker {
+                content: none;
+            }
 
         .field-validation-error {
             color: red;
@@ -81,32 +114,49 @@
             margin-top: 5px;
         }
 
-        .validation-summary-errors {
-            list-style: none; /* Xóa dấu bullet */
+        .register-link {
+            text-align: center;
+            margin-top: 15px;
         }
 
-            .validation-summary-errors::marker {
-                content: none; /* Ẩn dấu bullet */
+            .register-link a {
+                color: #007BFF;
+                text-decoration: none;
+                font-size: 0.9em;
             }
+
+                .register-link a:hover {
+                    text-decoration: underline;
+                    color: #0056b3;
+                }
     </style>
 </head>
 <body>
     <div class="login-container">
-        <h2>Đăng nhập</h2>
+        <h2>Login</h2>
         <form asp-controller="Authentication" asp-action="Login" class="login-form">
             <div class="form-group">
                 <label asp-for="AccountEmail">Email</label>
-                <input type="email" asp-for="AccountEmail" placeholder="Nhập email" required>
+                <input type="email" asp-for="AccountEmail" placeholder="Enter email" required>
                 <span asp-validation-for="AccountEmail" class="field-validation-error"></span>
             </div>
             <div class="form-group">
-                <label asp-for="AccountPassword">Mật khẩu</label>
-                <input type="password" asp-for="AccountPassword" placeholder="Nhập mật khẩu" required>
+                <label asp-for="AccountPassword">Password</label>
+                <input type="password" asp-for="AccountPassword" placeholder="Enter password" required>
                 <span asp-validation-for="AccountPassword" class="field-validation-error"></span>
             </div>
             <div class="validation-summary-errors" asp-validation-summary="ModelOnly"></div>
-            <button type="submit">Đăng nhập</button>
+            <button type="submit">Login</button>
         </form>
+        <form asp-controller="Authentication" asp-action="GoogleLogin" method="post">
+            <button type="submit" class="google-btn">
+                <span class="google-icon"></span>
+                Sign in with Google
+            </button>
+        </form>
+        <div class="register-link">
+            <p>Don't have an account? <a asp-controller="Authentication" asp-action="Register">Register now</a></p>
+        </div>
     </div>
 </body>
 </html>

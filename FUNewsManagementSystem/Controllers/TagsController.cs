@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BusinessObjects.Models;
 using Services.Interfaces;
+using FUNewsManagementSystem.Filters;
 
 namespace FUNewsManagementSystem.Controllers
 {
+    [AuthorizeRole("Staff")]
     public class TagsController : Controller
     {
         private readonly ITagService _tagService;
@@ -109,7 +111,7 @@ namespace FUNewsManagementSystem.Controllers
             }
             catch (Exception ex)
             {
-                result = new { success = false, message = ex.Message };
+                result = new { success = false, message = "this tag cannot delete because has news using this" };
             }
 
             return Json(result);

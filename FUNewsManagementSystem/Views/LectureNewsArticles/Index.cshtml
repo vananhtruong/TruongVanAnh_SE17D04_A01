@@ -47,7 +47,16 @@
                             <span>@Html.DisplayFor(modelItem => item.NewsSource)</span> |
                             <span>@Html.DisplayFor(modelItem => item.Category.CategoryDesciption)</span>
                         </small>
-                        <a class="btn btn-outline-primary btn-sm float-end"
+                        <div class="tags mt-2">
+                            @if (item.Tags != null && item.Tags.Any())
+                            {
+                                foreach (var tag in item.Tags)
+                                {
+                                    <span class="badge bg-secondary me-1">@Html.DisplayFor(modelItem => tag.TagName)</span>
+                                }
+                            }
+                        </div>
+                        <a class="btn btn-outline-primary btn-sm float-end mt-2"
                            asp-action="Details"
                            asp-route-id="@item.NewsArticleId">
                             Read More <i class="fas fa-arrow-right ms-1"></i>
@@ -57,6 +66,70 @@
             </div>
         }
     </div>
+
+    <!-- Phân trang -->
+    @if (ViewBag.TotalPages > 1)
+    {
+        <nav aria-label="Page navigation" class="mt-4">
+            <ul class="pagination justify-content-center">
+                <!-- Previous -->
+                @if (ViewBag.PageNumber > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link"
+                           asp-action="Index"
+                           asp-route-pageNumber="@(ViewBag.PageNumber - 1)"
+                           asp-route-pageSize="@ViewBag.PageSize"
+                           asp-route-searchString="@ViewData["CurrentFilter"]"
+                           asp-route-categoryId="@((ViewData["CategoryId"] as SelectList)?.SelectedValue)">Previous</a>
+                    </li>
+                }
+                else
+                {
+                    <li class="page-item disabled">
+                        <span class="page-link">Previous</span>
+                    </li>
+                }
+
+                <!-- Page Numbers -->
+                @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                {
+                    <li class="page-item @(i == ViewBag.PageNumber ? "active" : "")">
+                        <a class="page-link"
+                           asp-action="Index"
+                           asp-route-pageNumber="@i"
+                           asp-route-pageSize="@ViewBag.PageSize"
+                           asp-route-searchString="@ViewData["CurrentFilter"]"
+                           asp-route-categoryId="@((ViewData["CategoryId"] as SelectList)?.SelectedValue)">@i</a>
+                    </li>
+                }
+
+                <!-- Next -->
+                @if (ViewBag.PageNumber < ViewBag.TotalPages)
+                {
+                    <li class="page-item">
+                        <a class="page-link"
+                           asp-action="Index"
+                           asp-route-pageNumber="@(ViewBag.PageNumber + 1)"
+                           asp-route-pageSize="@ViewBag.PageSize"
+                           asp-route-searchString="@ViewData["CurrentFilter"]"
+                           asp-route-categoryId="@((ViewData["CategoryId"] as SelectList)?.SelectedValue)">Next</a>
+                    </li>
+                }
+                else
+                {
+                    <li class="page-item disabled">
+                        <span class="page-link">Next</span>
+                    </li>
+                }
+            </ul>
+        </nav>
+
+        <!-- Thông tin tổng quan -->
+        <div class="text-center mt-3 text-muted">
+            Showing @(ViewBag.PageSize * (ViewBag.PageNumber - 1) + 1) to @(Math.Min(ViewBag.PageSize * ViewBag.PageNumber, ViewBag.TotalItems)) of @ViewBag.TotalItems news articles
+        </div>
+    }
 </div>
 
 @functions {

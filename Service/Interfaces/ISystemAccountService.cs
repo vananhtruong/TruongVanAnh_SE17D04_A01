@@ -19,5 +19,7 @@ namespace Services.Interfaces
         Task<bool> SystemAccountExists(short id);
         Task<(int role, string message)> Login(SystemAccount accountLogin, HttpContext httpContext);
         Task<SystemAccount> GetSystemAccountByEmail(string email);
+        Task<(SystemAccount account, string role)> HandleGoogleLogin(string email, string name, HttpContext httpContext);
+        Task<SystemAccount> GetSystemAccount(string email, string pass);
     }
 }

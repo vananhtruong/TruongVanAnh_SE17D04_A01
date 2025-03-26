@@ -1,0 +1,62 @@
+﻿@model IEnumerable<BusinessObjects.Models.NewsArticle>
+
+@{
+    ViewData["Title"] = "News Approval";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="card-header">
+    <h3>Pending News Articles</h3>
+</div>
+
+<div class="card-body">
+    <!-- Search Form -->
+    <form asp-action="Index" method="get" class="mb-3">
+        <div class="input-group">
+            <input type="text" name="searchString" class="form-control"
+                   placeholder="Search by title, headline, or content"
+                   value="@ViewData["SearchString"]" />
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+    </form>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+
+    <!-- Articles Table -->
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Headline</th>
+                <th>Category</th>
+                <th>Created By</th>
+                <th>Created Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var article in Model)
+            {
+                <tr>
+                    <td>@article.NewsTitle</td>
+                    <td>@article.Headline</td>
+                    <td>@article.Category?.CategoryName</td>
+                    <td>@article.CreatedBy?.AccountName</td>
+                    <td>@article.CreatedDate?.ToString("MM/dd/yyyy")</td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@article.NewsArticleId" class="btn btn-sm btn-info">
+                            <i class="bi bi-eye"></i> View
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    </tbody>

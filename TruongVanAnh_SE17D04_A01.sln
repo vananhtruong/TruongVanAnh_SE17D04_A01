@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35806.99 d17.13
+VisualStudioVersion = 17.13.35806.99
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessObjects", "BusinessObjects\BusinessObjects.csproj", "{2A0180EA-57B3-4495-B404-390293A6F3FF}"
 EndProject
@@ -12,6 +12,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service", "Service\Service.csproj", "{E30B69F0-EF8C-4229-AAB0-767D5044805B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FUNewsManagementSystem", "FUNewsManagementSystem\FUNewsManagementSystem.csproj", "{7B6D3DFD-69E2-4197-B987-8F400BDCE8F1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TVANewManagementSystemRazorPage", "TVANewManagementSystemRazorPage\TVANewManagementSystemRazorPage.csproj", "{DF785AE6-0B75-4F62-B4D7-D6FBE66AD63A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{7B6D3DFD-69E2-4197-B987-8F400BDCE8F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7B6D3DFD-69E2-4197-B987-8F400BDCE8F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7B6D3DFD-69E2-4197-B987-8F400BDCE8F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF785AE6-0B75-4F62-B4D7-D6FBE66AD63A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF785AE6-0B75-4F62-B4D7-D6FBE66AD63A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF785AE6-0B75-4F62-B4D7-D6FBE66AD63A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF785AE6-0B75-4F62-B4D7-D6FBE66AD63A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

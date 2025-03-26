@@ -1,0 +1,156 @@
+﻿@model BusinessObjects.Models.SystemAccount
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+            margin: 0;
+        }
+
+        .register-container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            width: 350px;
+        }
+
+            .register-container h2 {
+                text-align: center;
+                margin-bottom: 20px;
+                color: #333;
+            }
+
+            .register-container .form-group {
+                margin-bottom: 15px;
+            }
+
+            .register-container label {
+                display: block;
+                margin-bottom: 5px;
+                color: #555;
+            }
+
+            .register-container input {
+                width: 100%;
+                padding: 12px;
+                margin-top: 5px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                box-sizing: border-box;
+            }
+
+            .register-container button,
+            .register-container .btn {
+                width: 100%;
+                padding: 12px;
+                background-color: #007BFF;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+                text-align: center;
+                text-decoration: none;
+                display: block;
+            }
+
+                .register-container button:hover,
+                .register-container .btn:hover {
+                    background-color: #0056b3;
+                }
+
+        .validation-summary-errors {
+            color: red;
+            margin-bottom: 10px;
+            list-style: none;
+        }
+
+            .validation-summary-errors::marker {
+                content: none;
+            }
+
+        .field-validation-error {
+            color: red;
+            font-size: 0.9em;
+            display: block;
+            margin-top: 5px;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+            .register-link a {
+                color: #007BFF;
+                text-decoration: none;
+                font-size: 0.9em;
+            }
+
+                .register-link a:hover {
+                    text-decoration: underline;
+                    color: #0056b3;
+                }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <h2>Register</h2>
+
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success">
+                @TempData["SuccessMessage"]
+            </div>
+        }
+
+        <form asp-action="Register" method="post">
+            <div asp-validation-summary="ModelOnly" class="validation-summary-errors"></div>
+
+            <div class="form-group">
+                <label asp-for="AccountName">Username</label>
+                <input asp-for="AccountName" placeholder="Enter username" required />
+                <span asp-validation-for="AccountName" class="field-validation-error"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="AccountEmail">Email</label>
+                <input asp-for="AccountEmail" type="email" placeholder="Enter email" required />
+                <span asp-validation-for="AccountEmail" class="field-validation-error"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="AccountPassword">Password</label>
+                <input asp-for="AccountPassword" type="password" placeholder="Enter password" required />
+                <span asp-validation-for="AccountPassword" class="field-validation-error"></span>
+            </div>
+
+            <button type="submit">Register</button>
+            <div class="register-link">
+                <p>Already have an account? <a asp-controller="Authentication" asp-action="Login">Login here</a></p>
+            </div>
+        </form>
+    </div>
+
+    @section Scripts {
+        @{
+            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        }
+    }
+</body>
+</html>

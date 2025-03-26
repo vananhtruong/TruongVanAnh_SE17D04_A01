@@ -5,11 +5,15 @@ using Repositories;
 using Repositories.Interfaces;
 using DataAccessLayer;
 using Microsoft.EntityFrameworkCore;
+using Service.Interfaces;
+using Service;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddHttpContextAccessor();
 
 // Cấu hình DbContext với lifetime Scoped
 builder.Services.AddDbContext<FunewsManagementContext>(options =>
@@ -26,18 +30,34 @@ builder.Services.AddScoped<ISystemAccountRepository, SystemAccountRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<INewsArticleRepository, NewsArticleRepository>();
 builder.Services.AddScoped<ITagRepository, TagRepository>();
+builder.Services.AddScoped<IReportRepository, ReportRepository>();
 
 // Đăng ký Services với lifetime Scoped
 builder.Services.AddScoped<ISystemAccountService, SystemAccountService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<INewsArticleService, NewsArticleService>();
 builder.Services.AddScoped<ITagService, TagService>();
+builder.Services.AddScoped<IReportService, ReportService>();
 //sesssion
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(20); // Set session timeout
     options.Cookie.HttpOnly = true; // For security
     options.Cookie.IsEssential = true; // Ensure session cookie is always created
+});
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = "Cookies";
+    options.DefaultSignInScheme = "Cookies";
+    options.DefaultChallengeScheme = "Google";
+})
+.AddCookie("Cookies")
+.AddGoogle("Google", options =>
+{
+    options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+    options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+    options.CallbackPath = "/signin-google";
 });
 
 var app = builder.Build();

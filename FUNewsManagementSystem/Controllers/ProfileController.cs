@@ -1,4 +1,5 @@
 ﻿using BusinessObjects.Models;
+using FUNewsManagementSystem.Filters;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -7,6 +8,7 @@ using Services.Interfaces;
 
 namespace FUNewsManagementSystem.Controllers
 {
+    [AuthorizeRole("Staff")]
     public class ProfileController : Controller
     {
         private readonly ISystemAccountService _systemAccountService;

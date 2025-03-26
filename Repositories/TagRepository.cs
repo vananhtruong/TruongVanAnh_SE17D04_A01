@@ -42,5 +42,9 @@ namespace Repositories
         {
             return _tagDAO.TagExists(id);
         }
+        public async Task<List<Tag>> GetTagsByIdsAsync(int[] selectedTagIds)
+        {
+            return await _tagDAO.GetTagsByIdsAsync(selectedTagIds);
+        }
     }
 }

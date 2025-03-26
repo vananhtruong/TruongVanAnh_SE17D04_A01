@@ -47,7 +47,16 @@
                             <span>@Html.DisplayFor(modelItem => item.NewsSource)</span> |
                             <span>@Html.DisplayFor(modelItem => item.Category.CategoryDesciption)</span>
                         </small>
-                        <a class="btn btn-outline-primary btn-sm float-end"
+                        <div class="tags mt-2">
+                            @if (item.Tags != null && item.Tags.Any())
+                            {
+                                foreach (var tag in item.Tags)
+                                {
+                                    <span class="badge bg-secondary me-1">@Html.DisplayFor(modelItem => tag.TagName)</span>
+                                }
+                            }
+                        </div>
+                        <a class="btn btn-outline-primary btn-sm float-end mt-2"
                            asp-action="Details"
                            asp-route-id="@item.NewsArticleId">
                             Read More <i class="fas fa-arrow-right ms-1"></i>

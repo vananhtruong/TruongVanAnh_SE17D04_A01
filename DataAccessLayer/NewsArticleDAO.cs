@@ -16,7 +16,10 @@ namespace DataAccessLayer
         public async Task<List<NewsArticle>> GetAllActiveNewsArticles()
         {
             return await _context.NewsArticles
-                .Where(na => na.NewsStatus == true).Include(c => c.Category).Include(a => a.CreatedBy)
+                .Where(na => na.NewsStatus == true)
+                .Include(c => c.Category)
+                .Include(a => a.CreatedBy)
+                .Include(t => t.Tags)
                 .ToListAsync();
         }
 
@@ -24,7 +27,7 @@ namespace DataAccessLayer
         public async Task<NewsArticle?> GetNewsArticleById(string newsArticleId)
         {
             return await _context.NewsArticles
-                .Include(c => c.Category).Include(a => a.CreatedBy)
+                .Include(c => c.Category).Include(a => a.CreatedBy).Include(t => t.Tags)
                 .FirstOrDefaultAsync(na => na.NewsArticleId == newsArticleId);
         }
 
@@ -39,10 +42,36 @@ namespace DataAccessLayer
         // Cập nhật bài viết tin tức
         public async Task<NewsArticle?> UpdateNewsArticle(NewsArticle newsArticle)
         {
-            var existingArticle = await _context.NewsArticles.FindAsync(newsArticle.NewsArticleId);
+            var existingArticle = await _context.NewsArticles
+                .Include(na => na.Tags) // Nạp danh sách Tags hiện tại
+                .FirstOrDefaultAsync(na => na.NewsArticleId == newsArticle.NewsArticleId);
+
             if (existingArticle != null)
             {
+                // Cập nhật các thuộc tính cơ bản
                 _context.Entry(existingArticle).CurrentValues.SetValues(newsArticle);
+
+                // Xử lý Tags
+                if (newsArticle.Tags != null)
+                {
+                    // Xóa các tag cũ trong bảng trung gian
+                    existingArticle.Tags.Clear();
+
+                    // Thêm các tag mới từ danh sách Tags của newsArticle
+                    foreach (var tag in newsArticle.Tags)
+                    {
+                        var tagToAdd = await _context.Tags.FindAsync(tag.TagId);
+                        if (tagToAdd != null)
+                        {
+                            existingArticle.Tags.Add(tagToAdd);
+                        }
+                    }
+                }
+
+                // Cập nhật ModifiedDate
+                existingArticle.ModifiedDate = DateTime.Now;
+
+                // Lưu thay đổi
                 await _context.SaveChangesAsync();
                 return existingArticle;
             }
@@ -55,7 +84,12 @@ namespace DataAccessLayer
             var newsArticle = await _context.NewsArticles.FindAsync(newsArticleId);
             if (newsArticle != null)
             {
-                _context.NewsArticles.Remove(newsArticle);
+                // Perform a soft delete by setting NewsStatus to false
+                newsArticle.NewsStatus = false;
+                // Optionally update ModifiedDate to reflect the change
+                newsArticle.ModifiedDate = DateTime.Today;
+
+                // Save the changes
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -80,7 +114,7 @@ namespace DataAccessLayer
         public async Task<List<NewsArticle>> NewsArticlesFilter(string searchString, int cateogryId)
         {
             // Lấy tất cả bài viết nếu không có điều kiện nào
-            var query = _context.NewsArticles.AsQueryable();
+            var query = _context.NewsArticles.Include(t => t.Tags).AsQueryable();
 
             // Xử lý searchString
             if (!string.IsNullOrEmpty(searchString))
@@ -104,7 +138,7 @@ namespace DataAccessLayer
         public async Task<List<NewsArticle>> NewsArticlesStaff(string searchString, int cateogryId, int id)
         {
             // Lấy tất cả bài viết nếu không có điều kiện nào
-            var query = _context.NewsArticles.AsQueryable();
+            var query = _context.NewsArticles.Include(t => t.Tags).AsQueryable();
 
             // Xử lý searchString
             if (!string.IsNullOrEmpty(searchString))

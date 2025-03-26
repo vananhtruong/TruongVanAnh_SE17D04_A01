@@ -11,5 +11,6 @@ namespace Services.Interfaces
         Task<Tag?> UpdateTag(Tag tag);
         Task<bool> DeleteTag(int tagId);
         bool TagExists(int id);
+        Task<List<Tag>> GetTagsByIdsAsync(int[] selectedTagIds);
     }
 }

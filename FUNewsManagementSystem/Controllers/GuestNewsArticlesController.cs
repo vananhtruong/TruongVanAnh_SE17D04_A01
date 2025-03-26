@@ -22,12 +22,13 @@ namespace FUNewsManagementSystem.Controllers
         }
 
         // GET: NewsArticles
-        public async Task<IActionResult> Index(string searchString, int? categoryId) 
+        public async Task<IActionResult> Index(string searchString, int? categoryId)
         {
             var categories = await _categoryService.GetAllCategories();
             ViewData["CurrentFilter"] = searchString;
             ViewData["CategoryId"] = new SelectList(categories, "CategoryId", "CategoryName", categoryId);
             var newsArticles = await _newsArticleService.NewsArticlesFilter(searchString, categoryId ?? 0);
+            newsArticles = newsArticles.Where(n => n.NewsStatus == true).ToList();
             return View(newsArticles);
         }
 
