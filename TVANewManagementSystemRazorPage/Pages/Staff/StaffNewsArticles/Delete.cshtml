@@ -1,0 +1,93 @@
+﻿@page "{id?}"
+@model TVANewManagementSystemRazorPage.Pages.Staff.StaffNewsArticles.DeleteModel
+
+@{
+    ViewData["Title"] = "Delete News Article";
+    Layout = "~/Pages/Shared/_LayoutStaff.cshtml"; // Điều chỉnh đường dẫn layout nếu cần
+}
+
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-header bg-danger text-white">
+            <h2 class="mb-0">Confirm Deletion</h2>
+        </div>
+
+        <div class="card-body">
+            <h4 class="text-muted mb-4">News Article Details</h4>
+            <hr class="mb-4" />
+
+            <div class="alert alert-warning" role="alert">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                Are you sure you want to delete this article? This action cannot be undone.
+            </div>
+
+            <dl class="row mb-0">
+                <dt class="col-sm-3 fw-bold text-primary">@Html.DisplayNameFor(model => model.NewsArticle.NewsTitle)</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.NewsArticle.NewsTitle)</dd>
+
+                <dt class="col-sm-3 fw-bold text-primary">@Html.DisplayNameFor(model => model.NewsArticle.Headline)</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.NewsArticle.Headline)</dd>
+
+                <dt class="col-sm-3 fw-bold text-primary">@Html.DisplayNameFor(model => model.NewsArticle.CreatedDate)</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.NewsArticle.CreatedDate)</dd>
+
+                <dt class="col-sm-3 fw-bold text-primary">@Html.DisplayNameFor(model => model.NewsArticle.NewsContent)</dt>
+                <dd class="col-sm-9 truncated-text">@Html.DisplayFor(model => model.NewsArticle.NewsContent)</dd>
+
+                <dt class="col-sm-3 fw-bold text-primary">@Html.DisplayNameFor(model => model.NewsArticle.NewsSource)</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.NewsArticle.NewsSource)</dd>
+
+                <dt class="col-sm-3 fw-bold text-primary">@Html.DisplayNameFor(model => model.NewsArticle.NewsStatus)</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.NewsArticle.NewsStatus)</dd>
+
+                <dt class="col-sm-3 fw-bold text-primary">@Html.DisplayNameFor(model => model.NewsArticle.UpdatedById)</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.NewsArticle.UpdatedById)</dd>
+
+                <dt class="col-sm-3 fw-bold text-primary">@Html.DisplayNameFor(model => model.NewsArticle.ModifiedDate)</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.NewsArticle.ModifiedDate)</dd>
+
+                <dt class="col-sm-3 fw-bold text-primary">@Html.DisplayNameFor(model => model.NewsArticle.Category)</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.NewsArticle.Category.CategoryDesciption)</dd>
+
+                <dt class="col-sm-3 fw-bold text-primary">@Html.DisplayNameFor(model => model.NewsArticle.CreatedBy)</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.NewsArticle.CreatedBy.AccountId)</dd>
+            </dl>
+
+            <form method="post" class="mt-4">
+                <input type="hidden" asp-for="NewsArticle.NewsArticleId" />
+                <div class="d-flex justify-content-start gap-2">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash-alt me-2"></i>Delete Article
+                    </button>
+                    <a asp-page="./Index" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Back to List
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .truncated-text {
+        max-height: 100px;
+        overflow-y: auto;
+        word-wrap: break-word;
+    }
+
+    .card-header {
+        border-bottom: none;
+    }
+
+    dt {
+        margin-bottom: 0.5rem;
+    }
+
+    dd {
+        margin-bottom: 1rem;
+    }
+</style>
+
+@section Scripts {
+    <script src="https://kit.fontawesome.com/your-font-awesome-kit.js" crossorigin="anonymous"></script>
+}

@@ -1,0 +1,136 @@
+﻿@page "{id?}"
+@model TVANewManagementSystemRazorPage.Pages.Staff.StaffNewsArticles.DetailsModel
+
+@{
+    ViewData["Title"] = "News Article Details";
+    Layout = "~/Pages/Shared/_LayoutStaff.cshtml"; // Điều chỉnh đường dẫn layout nếu cần
+}
+
+<div class="container my-5">
+    <div class="card shadow-lg border-0">
+        <div class="card-header bg-gradient-dark text-white py-4">
+            <h1 class="display-5 fw-bold mb-1">@Html.DisplayFor(model => model.NewsArticle.NewsTitle)</h1>
+            <h5 class="text-light opacity-75 mb-0">@Html.DisplayFor(model => model.NewsArticle.Headline)</h5>
+        </div>
+        <div class="card-body p-5">
+            <p class="text-muted small mb-4">
+                <i class="fas fa-calendar-day me-2"></i> Published on: @Html.DisplayFor(model => model.NewsArticle.CreatedDate)
+            </p>
+            <hr class="my-4" />
+
+            <section class="news-content mb-5 p-4 bg-light rounded-3 shadow-sm">
+                <h4 class="fw-semibold text-dark mb-3"><i class="fas fa-newspaper me-2 text-primary"></i> Content</h4>
+                <p class="text-dark lh-lg">@Html.DisplayFor(model => model.NewsArticle.NewsContent)</p>
+            </section>
+
+            <section class="news-meta mb-5 p-4 bg-light rounded-3 shadow-sm">
+                <h5 class="fw-semibold text-dark mb-3"><i class="fas fa-info-circle me-2 text-primary"></i> Details</h5>
+                <dl class="row mb-0 text-dark">
+                    <dt class="col-sm-4 col-md-3 fw-medium"><i class="fas fa-link me-2 text-muted"></i> @Html.DisplayNameFor(model => model.NewsArticle.NewsSource)</dt>
+                    <dd class="col-sm-8 col-md-9">@Html.DisplayFor(model => model.NewsArticle.NewsSource)</dd>
+
+                    <dt class="col-sm-4 col-md-3 fw-medium"><i class="fas fa-check-circle me-2 text-muted"></i> @Html.DisplayNameFor(model => model.NewsArticle.NewsStatus)</dt>
+                    <dd class="col-sm-8 col-md-9">@Html.DisplayFor(model => model.NewsArticle.NewsStatus)</dd>
+
+                    <dt class="col-sm-4 col-md-3 fw-medium"><i class="fas fa-user-edit me-2 text-muted"></i> @Html.DisplayNameFor(model => model.NewsArticle.UpdatedById)</dt>
+                    <dd class="col-sm-8 col-md-9">@Html.DisplayFor(model => model.NewsArticle.UpdatedById)</dd>
+
+                    <dt class="col-sm-4 col-md-3 fw-medium"><i class="fas fa-clock me-2 text-muted"></i> @Html.DisplayNameFor(model => model.NewsArticle.ModifiedDate)</dt>
+                    <dd class="col-sm-8 col-md-9">@Html.DisplayFor(model => model.NewsArticle.ModifiedDate)</dd>
+
+                    <dt class="col-sm-4 col-md-3 fw-medium"><i class="fas fa-folder-open me-2 text-muted"></i> @Html.DisplayNameFor(model => model.NewsArticle.Category)</dt>
+                    <dd class="col-sm-8 col-md-9">@Html.DisplayFor(model => model.NewsArticle.Category.CategoryName)</dd>
+
+                    <dt class="col-sm-4 col-md-3 fw-medium"><i class="fas fa-user me-2 text-muted"></i> @Html.DisplayNameFor(model => model.NewsArticle.CreatedBy)</dt>
+                    <dd class="col-sm-8 col-md-9">@Html.DisplayFor(model => model.NewsArticle.CreatedBy.AccountName)</dd>
+
+                    <dt class="col-sm-4 col-md-3 fw-medium"><i class="fas fa-tags me-2 text-muted"></i> Tags</dt>
+                    <dd class="col-sm-8 col-md-9">
+                        @if (Model.NewsArticle.Tags != null && Model.NewsArticle.Tags.Any())
+                        {
+                            foreach (var tag in Model.NewsArticle.Tags)
+                            {
+                                <span class="badge bg-primary me-1 mb-1">@Html.DisplayFor(modelItem => tag.TagName)</span>
+                            }
+                        }
+                        else
+                        {
+                            <span class="text-muted">No tags assigned</span>
+                        }
+                    </dd>
+                </dl>
+            </section>
+
+            <div class="d-flex justify-content-between flex-wrap gap-3">
+                <a class="btn btn-warning btn-lg px-4 py-2 shadow-sm" asp-page="./Edit" asp-route-id="@Model.NewsArticle.NewsArticleId">
+                    <i class="fas fa-edit me-2"></i> Edit Article
+                </a>
+                <a class="btn btn-outline-dark btn-lg px-4 py-2 shadow-sm" asp-page="./Index">
+                    <i class="fas fa-arrow-left me-2"></i> Back to List
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        border-radius: 15px;
+        overflow: hidden;
+        transition: transform 0.3s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+    .bg-gradient-dark {
+        background: linear-gradient(135deg, #343a40, #212529);
+    }
+
+    .news-content, .news-meta {
+        transition: all 0.3s ease;
+    }
+
+        .news-content:hover, .news-meta:hover {
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+    .btn-lg {
+        border-radius: 8px;
+        font-weight: 500;
+    }
+
+    .btn-warning {
+        background: linear-gradient(135deg, #ffca2c, #e0a800);
+        border: none;
+    }
+
+    .btn-outline-dark:hover {
+        background-color: #343a40;
+        color: white;
+    }
+
+    dl dt {
+        font-size: 0.95rem;
+    }
+
+    dl dd {
+        font-size: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    hr {
+        border-color: #dee2e6;
+        opacity: 0.5;
+    }
+
+    .badge {
+        padding: 0.35em 0.65em;
+        font-size: 0.85em;
+    }
+</style>
+
+@section Scripts {
+    <script src="https://kit.fontawesome.com/your-font-awesome-kit.js" crossorigin="anonymous"></script>
+}

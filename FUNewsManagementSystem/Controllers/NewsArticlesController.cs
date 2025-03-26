@@ -26,6 +26,8 @@ namespace FUNewsManagementSystem.Controllers
             _systemAccountService = systemAccountService;
             _tagService = tagService;
         }
+        [BindProperty] public SystemAccount systemAccount { get; set; }
+        [BindProperty] public NewsArticle NewsArticle { get; set; }
 
         // GET: NewsArticles
         public async Task<IActionResult> Index(string searchString, int? categoryId, bool createdByMe, int pageNumber = 1, int pageSize = 10)

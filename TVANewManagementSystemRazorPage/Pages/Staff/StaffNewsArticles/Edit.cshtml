@@ -1,0 +1,111 @@
+﻿@page "{id?}"
+@model TVANewManagementSystemRazorPage.Pages.Staff.StaffNewsArticles.EditModel
+
+@{
+    ViewData["Title"] = "Edit News Article";
+    Layout = "~/Pages/Shared/_LayoutStaff.cshtml"; // Điều chỉnh đường dẫn layout nếu cần
+}
+
+<div class="container-fluid py-5">
+    <div class="card shadow-sm border-0 mx-auto" style="max-width: 900px;">
+        <div class="card-header bg-dark text-white p-4">
+            <h1 class="h3 mb-0 fw-bold">Edit News Article</h1>
+            <p class="text-muted mb-0 mt-1">Update the details of the article</p>
+        </div>
+        <div class="card-body p-4">
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-4"></div>
+
+                <!-- Các trường ẩn -->
+                <input type="hidden" asp-for="NewsArticle.NewsArticleId" />
+                <input type="hidden" asp-for="NewsArticle.NewsStatus" />
+                <input type="hidden" asp-for="NewsArticle.CreatedDate" />
+                <input type="hidden" asp-for="NewsArticle.ModifiedDate" />
+                <input type="hidden" asp-for="NewsArticle.CreatedById" />
+                <input type="hidden" asp-for="NewsArticle.UpdatedById" />
+
+                <div class="row g-3">
+                    <!-- News Title -->
+                    <div class="col-md-12">
+                        <div class="form-floating">
+                            <input asp-for="NewsArticle.NewsTitle" class="form-control" placeholder="Enter news title" required />
+                            <label asp-for="NewsArticle.NewsTitle" class="form-label">News Title</label>
+                            <span asp-validation-for="NewsArticle.NewsTitle" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- Headline -->
+                    <div class="col-md-12">
+                        <div class="form-floating">
+                            <input asp-for="NewsArticle.Headline" class="form-control" placeholder="Enter headline" required />
+                            <label asp-for="NewsArticle.Headline" class="form-label">Headline</label>
+                            <span asp-validation-for="NewsArticle.Headline" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- News Content -->
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label asp-for="NewsArticle.NewsContent" class="form-label fw-bold">News Content</label>
+                            <textarea asp-for="NewsArticle.NewsContent" class="form-control" rows="10" style="resize: vertical;" placeholder="Enter the news content here..." required></textarea>
+                            <span asp-validation-for="NewsArticle.NewsContent" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- News Source -->
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <input asp-for="NewsArticle.NewsSource" class="form-control" placeholder="Enter source" />
+                            <label asp-for="NewsArticle.NewsSource" class="form-label">News Source</label>
+                            <span asp-validation-for="NewsArticle.NewsSource" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- Category -->
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <select asp-for="NewsArticle.CategoryId" class="form-control" asp-items="@(new SelectList(Model.Categories, "CategoryId", "CategoryName"))" required>
+                                <option value="">Select a category</option>
+                            </select>
+                            <label asp-for="NewsArticle.CategoryId" class="form-label">Category</label>
+                            <span asp-validation-for="NewsArticle.CategoryId" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- Tags -->
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="form-label fw-bold">Tags</label>
+                            <select asp-for="SelectedTags" class="form-control" multiple asp-items="@(new MultiSelectList(Model.Tags, "TagId", "TagName", Model.SelectedTags))" style="height: 150px;">
+                            </select>
+                            <small class="text-muted">Hold Ctrl (Windows) or Cmd (Mac) to select multiple tags</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Buttons -->
+                <div class="mt-4 d-flex justify-content-between">
+                    <a class="btn btn-outline-secondary" asp-page="./Index">
+                        <i class="fas fa-arrow-left me-1"></i> Back to List
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-1"></i> Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    select[multiple] {
+        padding: 10px;
+        border-radius: 5px;
+    }
+</style>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

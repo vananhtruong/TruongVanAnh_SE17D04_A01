@@ -146,7 +146,14 @@
                 <input type="password" asp-for="systemAccount.AccountPassword" placeholder="Enter password" required>
                 <span asp-validation-for="systemAccount.AccountPassword" class="field-validation-error"></span>
             </div>
+            <!-- Hiển thị thông báo lỗi tổng quát -->
             <div class="validation-summary-errors" asp-validation-summary="ModelOnly"></div>
+            @if (!ViewData.ModelState.IsValid && ViewData.ModelState.ContainsKey("LoginError"))
+            {
+                <div class="validation-summary-errors">
+                    @ViewData.ModelState["LoginError"]?.Errors.FirstOrDefault()?.ErrorMessage
+                </div>
+            }
             <button type="submit">Login</button>
         </form>
         <form asp-controller="Authentication" asp-action="GoogleLogin" method="post">

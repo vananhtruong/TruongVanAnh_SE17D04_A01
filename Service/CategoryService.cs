@@ -23,7 +23,7 @@ namespace Services
         public async Task<Category?> GetCategoryById(short categoryId)
         {
             var category = await _categoryRepository.GetCategoryById(categoryId);
-            if (category == null || category.IsActive == false)
+            if (category == null)
             {
                 return null;
             }
@@ -45,7 +45,7 @@ namespace Services
         public async Task<Category?> UpdateCategory(Category category)
         {
             var existingCategory = await _categoryRepository.GetCategoryById(category.CategoryId);
-            if (existingCategory == null || existingCategory.IsActive == false)
+            if (existingCategory == null )
             {
                 return null;
             }

@@ -36,16 +36,16 @@ namespace TVANewManagementSystemRazorPage.Pages
 
             // Kiểm tra xem có phải tài khoản admin từ config không
             bool isAdminFromConfig = systemAccount.AccountEmail == adminEmail &&
-                                   systemAccount.AccountPassword == adminPassword;
+                                    systemAccount.AccountPassword == adminPassword;
 
             if (user != null || isAdminFromConfig)
             {
                 var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, systemAccount.AccountEmail),
-                // Nếu là admin từ config, gán role Admin, nếu không thì lấy role từ database
-                new Claim(ClaimTypes.Role, isAdminFromConfig ? "Admin" : GetRole(user?.AccountRole.Value ?? 0)),
-            };
+                {
+                    new Claim(ClaimTypes.Name, systemAccount.AccountEmail),
+                    // Nếu là admin từ config, gán role Admin, nếu không thì lấy role từ database
+                    new Claim(ClaimTypes.Role, isAdminFromConfig ? "Admin" : GetRole(user?.AccountRole.Value ?? 0)),
+                };
 
                 // Nếu user không null thì thêm UserId
                 if (user != null)
@@ -73,12 +73,18 @@ namespace TVANewManagementSystemRazorPage.Pages
                 }
                 else if (user?.AccountRole == 1)
                 {
-                    return RedirectToPage("/Index");
+                    return RedirectToPage("/Staff/StaffNewsArticles/Index");
                 }
                 else if (user?.AccountRole == 2)
                 {
                     return RedirectToPage("/Privacy");
                 }
+            }
+            else
+            {
+                // Thêm lỗi vào ModelState khi đăng nhập thất bại
+                ModelState.AddModelError("LoginError", "Email hoặc mật khẩu không đúng.");
+                return Page(); // Trả về lại trang login với thông báo lỗi
             }
 
             return RedirectToPage("/Index");
