@@ -2,6 +2,7 @@ using BusinessObjects.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.SignalR;
 using Services.Interfaces;
 
 namespace TVANewManagementSystemRazorPage.Pages.Admin
@@ -64,6 +65,8 @@ namespace TVANewManagementSystemRazorPage.Pages.Admin
                 await _newsArticleService.UpdateNewsArticle(article);
 
                 TempData["Success"] = "Article approved successfully";
+                var hubContext = HttpContext.RequestServices.GetRequiredService<IHubContext<SignalrServer>>();
+                await hubContext.Clients.All.SendAsync("ReceiveUpdate");
                 return RedirectToPage("Index");
             }
             catch (Exception ex)

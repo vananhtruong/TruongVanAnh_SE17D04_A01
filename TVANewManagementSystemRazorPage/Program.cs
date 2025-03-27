@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using DataAccessLayer;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.Extensions.Options;
+using TVANewManagementSystemRazorPage;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,6 +35,8 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<INewsArticleService, NewsArticleService>();
 builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped<ITagService, TagService>();
+
+builder.Services.AddSignalR();
 
 // Configure authentication with Cookies and Google
 builder.Services.AddAuthentication(options =>
@@ -87,7 +90,7 @@ app.MapGet("/", (HttpContext http) =>
     http.Response.Redirect("/Login");
     return Task.CompletedTask;
 });
-
+app.MapHub<SignalrServer>("/signalrServer");
 app.MapRazorPages();
 
 app.Run();

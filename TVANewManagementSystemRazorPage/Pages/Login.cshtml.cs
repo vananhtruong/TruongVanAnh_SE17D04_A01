@@ -45,7 +45,7 @@ namespace TVANewManagementSystemRazorPage.Pages
                     new Claim(ClaimTypes.Name, systemAccount.AccountEmail),
                     new Claim(ClaimTypes.Role, isAdminFromConfig ? "Admin" : GetRole(user?.AccountRole.Value ?? 0)),
                 };
-
+                var roledebug = GetRole(user?.AccountRole.Value ?? 0);
                 if (user != null)
                 {
                     claims.Add(new Claim("UserId", user.AccountId.ToString()));
