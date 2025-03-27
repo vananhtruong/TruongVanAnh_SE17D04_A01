@@ -8,9 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using BusinessObjects.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TVANewManagementSystemRazorPage.Pages.Lecture
 {
+    [Authorize(Roles = "Lecture")]
     public class IndexModel : PageModel
     {
         private readonly INewsArticleService _newsArticleService;

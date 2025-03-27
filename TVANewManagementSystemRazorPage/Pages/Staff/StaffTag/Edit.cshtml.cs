@@ -8,9 +8,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BusinessObjects.Models;
 using Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TVANewManagementSystemRazorPage.Pages.Staff.StaffTag
 {
+    [Authorize(Roles = "Staff")]
     public class EditModel : PageModel
     {
         private readonly ITagService _tagService;

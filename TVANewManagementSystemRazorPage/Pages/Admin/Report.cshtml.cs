@@ -1,10 +1,12 @@
 ﻿using BusinessObjects.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Service.Interfaces;
 
 namespace TVANewManagementSystemRazorPage.Pages.Admin
 {
+    [Authorize(Roles = "Admin")]
     public class ReportModel : PageModel
     {
         private readonly IReportService _reportService;

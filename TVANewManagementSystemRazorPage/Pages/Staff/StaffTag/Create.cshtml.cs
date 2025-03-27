@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using BusinessObjects.Models;
 using Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TVANewManagementSystemRazorPage.Pages.Staff.StaffTag
 {
+    [Authorize(Roles = "Staff")]
     public class CreateModel : PageModel
     {
         private readonly ITagService _tagService;

@@ -8,6 +8,8 @@ using Service.Interfaces;
 using Service;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using DataAccessLayer;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,14 +35,26 @@ builder.Services.AddScoped<INewsArticleService, NewsArticleService>();
 builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped<ITagService, TagService>();
 
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
-    {
-        options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
-        options.LoginPath = "/Login";  // Trang login
-        options.LogoutPath = "/Logout"; // Trang logout
-        options.AccessDeniedPath = "/AccessDenied"; // Trang bị từ chối
-    });
+// Configure authentication with Cookies and Google
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme; // Set Google as the default challenge
+})
+.AddCookie(options =>
+ {
+     options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
+     options.LoginPath = "/Login";  // Login page
+     options.LogoutPath = "/Logout"; // Logout page
+     options.AccessDeniedPath = "/AccessDenied"; // Access denied page
+ })
+.AddGoogle(options =>
+{
+    options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+    options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+    options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme; // Use cookies to store the session
+});
 
 builder.Services.AddAuthorization();
 builder.Services.AddDistributedMemoryCache();

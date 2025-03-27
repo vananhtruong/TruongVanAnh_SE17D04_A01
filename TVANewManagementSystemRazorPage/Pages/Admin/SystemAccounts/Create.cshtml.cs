@@ -1,4 +1,5 @@
 using BusinessObjects.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -6,6 +7,7 @@ using Services.Interfaces;
 
 namespace TVANewManagementSystemRazorPage.Pages.Admin.SystemAccounts
 {
+    [Authorize(Roles = "Admin")]
     public class CreateModel : PageModel
     {
         private readonly ISystemAccountService _systemAccountService;

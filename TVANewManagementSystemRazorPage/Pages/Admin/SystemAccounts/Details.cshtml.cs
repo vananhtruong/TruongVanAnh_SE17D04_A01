@@ -1,10 +1,12 @@
 using BusinessObjects.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Services.Interfaces;
 
 namespace TVANewManagementSystemRazorPage.Pages.Admin.SystemAccounts
 {
+    [Authorize(Roles = "Admin")]
     public class DetailsModel : PageModel
     {
         private readonly ISystemAccountService _systemAccountService;

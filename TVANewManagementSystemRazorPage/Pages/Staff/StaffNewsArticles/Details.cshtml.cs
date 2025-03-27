@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using BusinessObjects.Models;
 using Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TVANewManagementSystemRazorPage.Pages.Staff.StaffNewsArticles
 {
+    [Authorize(Roles = "Staff")]
     public class DetailsModel : PageModel
     {
         private readonly INewsArticleService _newsArticleService;

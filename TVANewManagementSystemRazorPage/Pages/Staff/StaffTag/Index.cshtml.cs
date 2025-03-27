@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using BusinessObjects.Models;
 using Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TVANewManagementSystemRazorPage.Pages.Staff.StaffTag
 {
+    [Authorize(Roles = "Staff")]
     public class IndexModel : PageModel
     {
         private readonly ITagService _tagService;
