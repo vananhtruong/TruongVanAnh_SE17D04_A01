@@ -1,0 +1,147 @@
+﻿@page
+@model TVANewManagementSystemRazorPage.Pages.Lecture.IndexModel
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Pages/Shared/_LayoutLecture.cshtml"; // Match MVC layout
+}
+
+<div class="container py-4">
+    <h1 class="mb-4 text-center fw-bold">Latest News</h1>
+
+    <!-- Search Form -->
+    <div class="row mb-4">
+        <div class="col-md-8 offset-md-2">
+            <form method="get" class="input-group">
+                <select name="CategoryId" class="form-select" style="max-width: 200px;" asp-items="Model.CategorySelectList">
+                    <option value="">All Categories</option>
+                </select>
+                <input type="text" name="SearchString" class="form-control"
+                       placeholder="Search news articles..."
+                       value="@Model.SearchString" />
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-search me-2"></i>Search
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        @foreach (var item in Model.NewsArticles)
+        {
+            <div class="col-md-4 col-sm-6 mb-4">
+                <div class="card h-100 shadow-sm border-0 transition-hover">
+                    <div class="card-body p-4">
+                        <h5 class="card-title fw-bold text-primary mb-2">
+                            @Html.DisplayFor(modelItem => item.NewsTitle)
+                        </h5>
+                        <h6 class="card-subtitle mb-3 text-muted">
+                            @Html.DisplayFor(modelItem => item.Headline)
+                        </h6>
+                        <p class="card-text text-dark">
+                            @Html.Raw(GetShortContent(item.NewsContent, 100))
+                        </p>
+                    </div>
+                    <div class="card-footer bg-transparent border-top-0 pt-0 pb-3 px-4">
+                        <small class="text-muted d-block mb-2">
+                            <span>@Html.DisplayFor(modelItem => item.CreatedDate, "{0:MMM dd, yyyy}")</span> |
+                            <span>@Html.DisplayFor(modelItem => item.NewsSource)</span> |
+                            <span>@Html.DisplayFor(modelItem => item.Category.CategoryDesciption)</span>
+                        </small>
+                        <div class="tags mt-2">
+                            @if (item.Tags != null && item.Tags.Any())
+                            {
+                                foreach (var tag in item.Tags)
+                                {
+                                    <span class="badge bg-secondary me-1">@Html.DisplayFor(modelItem => tag.TagName)</span>
+                                }
+                            }
+                        </div>
+                        <a class="btn btn-outline-primary btn-sm float-end mt-2"
+                           asp-page="Details"
+                           asp-route-id="@item.NewsArticleId">
+                            Read More <i class="fas fa-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Pagination -->
+    @if (Model.TotalPages > 1)
+    {
+        <nav aria-label="Page navigation" class="mt-4">
+            <ul class="pagination justify-content-center">
+                <!-- Previous -->
+                @if (Model.PageNumber > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link"
+                           asp-page="Index"
+                           asp-route-pageNumber="@(Model.PageNumber - 1)"
+                           asp-route-pageSize="@Model.PageSize"
+                           asp-route-searchString="@Model.SearchString"
+                           asp-route-categoryId="@Model.CategoryId">Previous</a>
+                    </li>
+                }
+                else
+                {
+                    <li class="page-item disabled">
+                        <span class="page-link">Previous</span>
+                    </li>
+                }
+
+                <!-- Page Numbers -->
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                        <a class="page-link"
+                           asp-page="Index"
+                           asp-route-pageNumber="@i"
+                           asp-route-pageSize="@Model.PageSize"
+                           asp-route-searchString="@Model.SearchString"
+                           asp-route-categoryId="@Model.CategoryId">@i</a>
+                    </li>
+                }
+
+                <!-- Next -->
+                @if (Model.PageNumber < Model.TotalPages)
+                {
+                    <li class="page-item">
+                        <a class="page-link"
+                           asp-page="Index"
+                           asp-route-pageNumber="@(Model.PageNumber + 1)"
+                           asp-route-pageSize="@Model.PageSize"
+                           asp-route-searchString="@Model.SearchString"
+                           asp-route-categoryId="@Model.CategoryId">Next</a>
+                    </li>
+                }
+                else
+                {
+                    <li class="page-item disabled">
+                        <span class="page-link">Next</span>
+                    </li>
+                }
+            </ul>
+        </nav>
+
+        <!-- Pagination Info -->
+        <div class="text-center mt-3 text-muted">
+            Showing @(Model.PageSize * (Model.PageNumber - 1) + 1) to @(Math.Min(Model.PageSize * Model.PageNumber, Model.TotalItems)) of @Model.TotalItems news articles
+        </div>
+    }
+</div>
+
+@functions {
+    // Helper method to truncate content
+    public string GetShortContent(string content, int maxLength)
+    {
+        if (string.IsNullOrEmpty(content))
+            return string.Empty;
+
+        if (content.Length <= maxLength)
+            return content;
+
+        return content.Substring(0, maxLength) + "...";
+    }
+}

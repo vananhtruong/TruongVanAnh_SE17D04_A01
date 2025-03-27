@@ -69,15 +69,15 @@ namespace TVANewManagementSystemRazorPage.Pages
                 // Điều hướng dựa trên role
                 if (isAdminFromConfig || (user?.AccountRole == 3))
                 {
-                    return RedirectToPage("/Admin/Index"); // Có thể tạo page riêng cho admin
+                    return RedirectToPage("/Admin/SystemAccounts/Index"); // Admin
                 }
                 else if (user?.AccountRole == 1)
                 {
-                    return RedirectToPage("/Staff/StaffNewsArticles/Index");
+                    return RedirectToPage("/Staff/StaffNewsArticles/Index"); //Staff
                 }
                 else if (user?.AccountRole == 2)
                 {
-                    return RedirectToPage("/Privacy");
+                    return RedirectToPage("/Lecture/Index"); //Lecture
                 }
             }
             else

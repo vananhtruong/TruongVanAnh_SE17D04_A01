@@ -1,0 +1,50 @@
+﻿@page "{id}"
+@model TVANewManagementSystemRazorPage.Pages.Admin.DetailsModel
+@{
+    ViewData["Title"] = "Article Details";
+    Layout = "~/Pages/Shared/_LayoutAdmin.cshtml"; // Match MVC layout
+}
+
+<div class="card-header">
+    <h3>Article Details</h3>
+</div>
+
+<div class="card-body">
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+
+    <dl class="row">
+        <dt class="col-sm-2">Title</dt>
+        <dd class="col-sm-10">@Model.Article.NewsTitle</dd>
+
+        <dt class="col-sm-2">Headline</dt>
+        <dd class="col-sm-10">@Model.Article.Headline</dd>
+
+        <dt class="col-sm-2">Content</dt>
+        <dd class="col-sm-10">@Model.Article.NewsContent</dd>
+
+        <dt class="col-sm-2">Category</dt>
+        <dd class="col-sm-10">@Model.Article.Category?.CategoryName</dd>
+
+        <dt class="col-sm-2">Created By</dt>
+        <dd class="col-sm-10">@Model.Article.CreatedBy?.AccountName</dd>
+
+        <dt class="col-sm-2">Created Date</dt>
+        <dd class="col-sm-10">@Model.Article.CreatedDate?.ToString("MM/dd/yyyy HH:mm")</dd>
+    </dl>
+
+    <div class="mt-4">
+        <form method="post" asp-page-handler="Approve">
+            <input type="hidden" name="id" value="@Model.Article.NewsArticleId" />
+            <button type="submit" class="btn btn-success"
+                    onclick="return confirm('Are you sure you want to approve this article?')">
+                <i class="bi bi-check-circle"></i> Approve
+            </button>
+        </form>
+        <a asp-page="Index" class="btn btn-secondary ms-2">
+            <i class="bi bi-arrow-left"></i> Back
+        </a>
+    </div>
+</div>

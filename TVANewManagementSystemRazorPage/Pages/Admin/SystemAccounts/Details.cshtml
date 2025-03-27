@@ -1,0 +1,68 @@
+﻿@page "{id:int}"
+@model TVANewManagementSystemRazorPage.Pages.Admin.SystemAccounts.DetailsModel
+@{
+    ViewData["Title"] = "Account Details";
+    Layout = "~/Pages/Shared/_LayoutAdmin.cshtml"; // Match MVC layout
+}
+
+<div class="container my-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Account Details</h5>
+            <a asp-page="Index" class="btn btn-sm btn-outline-light">
+                <i class="bi bi-arrow-left me-1"></i> Back to List
+            </a>
+        </div>
+        <div class="card-body p-4">
+            <dl class="row mb-0">
+                <!-- Account Name -->
+                <dt class="col-md-3 fw-bold text-muted">
+                    @Html.DisplayNameFor(model => model.SystemAccount.AccountName)
+                </dt>
+                <dd class="col-md-9">
+                    @Html.DisplayFor(model => model.SystemAccount.AccountName)
+                </dd>
+
+                <!-- Account Email -->
+                <dt class="col-md-3 fw-bold text-muted">
+                    @Html.DisplayNameFor(model => model.SystemAccount.AccountEmail)
+                </dt>
+                <dd class="col-md-9">
+                    <a href="mailto:@Model.SystemAccount.AccountEmail" class="text-decoration-none">
+                        @Html.DisplayFor(model => model.SystemAccount.AccountEmail)
+                    </a>
+                </dd>
+
+                <!-- Account Role -->
+                <dt class="col-md-3 fw-bold text-muted">
+                    @Html.DisplayNameFor(model => model.SystemAccount.AccountRole)
+                </dt>
+                <dd class="col-md-9">
+                    <span class="badge bg-primary-subtle text-primary">
+                        @(Model.SystemAccount.AccountRole.HasValue && Model.RoleMapping != null && Model.RoleMapping.ContainsKey(Model.SystemAccount.AccountRole.Value)
+                            ? Model.RoleMapping[Model.SystemAccount.AccountRole.Value]
+                            : Model.SystemAccount.AccountRole?.ToString() ?? "N/A")
+                    </span>
+                </dd>
+
+                <!-- Account Password -->
+                <dt class="col-md-3 fw-bold text-muted">
+                    @Html.DisplayNameFor(model => model.SystemAccount.AccountPassword)
+                </dt>
+                <dd class="col-md-9">
+                    <em class="text-muted">********</em>
+                </dd>
+            </dl>
+
+            <!-- Action Buttons -->
+            <div class="d-flex justify-content-end gap-2 mt-4">
+                <a asp-page="Edit" asp-route-id="@Model.SystemAccount?.AccountId" class="btn btn-primary">
+                    <i class="bi bi-pencil me-1"></i> Edit
+                </a>
+                <a asp-page="Index" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left me-1"></i> Back to List
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

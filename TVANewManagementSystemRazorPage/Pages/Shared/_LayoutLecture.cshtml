@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@{
+    string user = User.Identity.IsAuthenticated ? User.Identity.Name : "Guest"; // Lấy từ Claims
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -20,10 +23,37 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Lecture/Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Lecture/Index">Home</a>
+                        </li>
+                    </ul>
+                    <!-- User Actions Dropdown -->
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-white" href="#" id="userDropdown" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-user-circle me-1"></i>
+                                <span style="color: #000000;">@user</span> <!-- Màu đen, bạn có thể thay đổi -->
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                <li>
+                                    <form asp-controller="Profile" asp-action="Details" method="get">
+                                        <button type="submit" class="dropdown-item">
+                                            <i class="fas fa-user me-2"></i> View Profile
+                                        </button>
+                                    </form>
+                                </li>
+                                <li>
+                                    <form asp-area="" asp-page="/Logout">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="dropdown-item text-danger">
+                                            <i class="fas fa-sign-out-alt me-2"></i> Logout
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </div>

@@ -1,0 +1,110 @@
+﻿@page
+@model TVANewManagementSystemRazorPage.Pages.Admin.SystemAccounts.CreateModel
+@{
+    ViewData["Title"] = "Create New Account";
+    Layout = "~/Pages/Shared/_LayoutAdmin.cshtml"; // Match MVC layout
+}
+
+<div class="container my-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Create New Account</h5>
+            <a asp-page="Index" class="btn btn-sm btn-outline-light">
+                <i class="bi bi-arrow-left me-1"></i> Back to List
+            </a>
+        </div>
+        <div class="card-body p-4">
+            <form method="post">
+                <!-- Validation Summary -->
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-4" role="alert"></div>
+
+                <!-- Account ID -->
+                <div class="row mb-3">
+                    <label asp-for="SystemAccount.AccountId" class="col-md-3 col-form-label fw-bold"></label>
+                    <div class="col-md-9">
+                        <input asp-for="SystemAccount.AccountId" class="form-control" placeholder="Enter account ID" />
+                        <span asp-validation-for="SystemAccount.AccountId" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- Account Name -->
+                <div class="row mb-3">
+                    <label asp-for="SystemAccount.AccountName" class="col-md-3 col-form-label fw-bold"></label>
+                    <div class="col-md-9">
+                        <input asp-for="SystemAccount.AccountName" class="form-control" placeholder="Enter account name" />
+                        <span asp-validation-for="SystemAccount.AccountName" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- Account Email -->
+                <div class="row mb-3">
+                    <label asp-for="SystemAccount.AccountEmail" class="col-md-3 col-form-label fw-bold"></label>
+                    <div class="col-md-9">
+                        <input asp-for="SystemAccount.AccountEmail" class="form-control" type="email" placeholder="Enter email address" />
+                        <span asp-validation-for="SystemAccount.AccountEmail" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- Account Role (Dropdown) -->
+                <div class="row mb-3">
+                    <label asp-for="SystemAccount.AccountRole" class="col-md-3 col-form-label fw-bold"></label>
+                    <div class="col-md-9">
+                        <select asp-for="SystemAccount.AccountRole" class="form-select" asp-items="Model.RoleList">
+                            <option value="">-- Select Role --</option>
+                        </select>
+                        <span asp-validation-for="SystemAccount.AccountRole" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- Account Password -->
+                <div class="row mb-3">
+                    <label asp-for="SystemAccount.AccountPassword" class="col-md-3 col-form-label fw-bold"></label>
+                    <div class="col-md-9">
+                        <input asp-for="SystemAccount.AccountPassword" class="form-control" type="password" placeholder="Enter password" />
+                        <span asp-validation-for="SystemAccount.AccountPassword" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="row mb-4">
+                    <label for="confirmPassword" class="col-md-3 col-form-label fw-bold">Confirm Password</label>
+                    <div class="col-md-9">
+                        <input id="confirmPassword" name="confirmPassword" class="form-control" type="password" placeholder="Confirm password" />
+                        <span class="text-danger" id="confirm-password-error"></span>
+                    </div>
+                </div>
+
+                <!-- Buttons -->
+                <div class="d-flex justify-content-end gap-2">
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-check-circle me-1"></i> Create
+                    </button>
+                    <a asp-page="Index" class="btn btn-outline-secondary">
+                        <i class="bi bi-x-circle me-1"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $(document).ready(function () {
+            $('form').on('submit', function (e) {
+                var password = $('#SystemAccount_AccountPassword').val();
+                var confirmPassword = $('#confirmPassword').val();
+
+                if (password !== confirmPassword) {
+                    e.preventDefault();
+                    $('#confirm-password-error').text('Passwords do not match.');
+                } else {
+                    $('#confirm-password-error').text('');
+                }
+            });
+        });
+    </script>
+}
