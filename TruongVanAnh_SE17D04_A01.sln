@@ -11,8 +11,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repositories", "Repositorie
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service", "Service\Service.csproj", "{E30B69F0-EF8C-4229-AAB0-767D5044805B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FUNewsManagementSystem", "FUNewsManagementSystem\FUNewsManagementSystem.csproj", "{7B6D3DFD-69E2-4197-B987-8F400BDCE8F1}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TVANewManagementSystemRazorPage", "TVANewManagementSystemRazorPage\TVANewManagementSystemRazorPage.csproj", "{DF785AE6-0B75-4F62-B4D7-D6FBE66AD63A}"
 EndProject
 Global
@@ -37,10 +35,6 @@ Global
 		{E30B69F0-EF8C-4229-AAB0-767D5044805B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E30B69F0-EF8C-4229-AAB0-767D5044805B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E30B69F0-EF8C-4229-AAB0-767D5044805B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7B6D3DFD-69E2-4197-B987-8F400BDCE8F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7B6D3DFD-69E2-4197-B987-8F400BDCE8F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7B6D3DFD-69E2-4197-B987-8F400BDCE8F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7B6D3DFD-69E2-4197-B987-8F400BDCE8F1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DF785AE6-0B75-4F62-B4D7-D6FBE66AD63A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DF785AE6-0B75-4F62-B4D7-D6FBE66AD63A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DF785AE6-0B75-4F62-B4D7-D6FBE66AD63A}.Release|Any CPU.ActiveCfg = Release|Any CPU

@@ -111,10 +111,14 @@ namespace DataAccessLayer
         {
             return await _context.NewsArticles.AnyAsync(e => e.NewsArticleId == id);
         }
-        public async Task<List<NewsArticle>> NewsArticlesFilter(string searchString, int cateogryId)
+        public async Task<List<NewsArticle>> NewsArticlesFilter(string searchString, int categoryId)
         {
             // Lấy tất cả bài viết nếu không có điều kiện nào
-            var query = _context.NewsArticles.Include(t => t.Tags).AsQueryable();
+            var query = _context.NewsArticles
+                .Include(t => t.Tags)
+                .Include(t => t.Category)
+                .Include(t => t.CreatedBy)
+                .AsQueryable();
 
             // Xử lý searchString
             if (!string.IsNullOrEmpty(searchString))
@@ -124,13 +128,14 @@ namespace DataAccessLayer
                                         na.Headline.ToLower().Contains(searchLower) ||
                                         na.NewsContent.ToLower().Contains(searchLower) ||
                                         na.Category.CategoryName.ToLower().Contains(searchLower) ||
-                                        na.CreatedBy.AccountName.ToLower().Contains(searchLower));
+                                        na.CreatedBy.AccountName.ToLower().Contains(searchLower) ||
+                                        na.Tags.Any(t => t.TagName.ToLower().Contains(searchLower)));
             }
 
-            // Xử lý cateogryId
-            if (cateogryId > 0) // Giả sử cateogryId > 0 là giá trị hợp lệ
+            // Xử lý categoryId
+            if (categoryId > 0) // Giả sử categoryId > 0 là giá trị hợp lệ
             {
-                query = query.Where(na => na.CategoryId == cateogryId);
+                query = query.Where(na => na.CategoryId == categoryId);
             }
 
             return await query.ToListAsync();

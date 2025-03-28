@@ -9,6 +9,7 @@ using BusinessObjects.Models;
 using Services.Interfaces;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace TVANewManagementSystemRazorPage.Pages.Staff.StaffNewsArticles
 {
@@ -47,7 +48,7 @@ namespace TVANewManagementSystemRazorPage.Pages.Staff.StaffNewsArticles
             SystemAccount systemAccount = null;
             if (CreatedByMe)
             {
-                string userEmail = HttpContext.Session.GetString("UserEmail");
+                string userEmail = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
                 systemAccount = await _systemAccountService.GetSystemAccountByEmail(userEmail);
             }
 

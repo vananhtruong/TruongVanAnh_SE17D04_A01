@@ -63,7 +63,8 @@ namespace TVANewManagementSystemRazorPage.Pages.Admin.SystemAccounts
 
                 return Page();
             }
-
+            Random random = new Random();
+            SystemAccount.AccountId = (short)random.Next(100, 1001);
             await _systemAccountService.CreateSystemAccount(SystemAccount);
             return RedirectToPage("Index");
         }

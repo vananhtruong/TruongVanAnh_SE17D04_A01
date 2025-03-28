@@ -20,9 +20,9 @@
 
                 <!-- Account ID -->
                 <div class="row mb-3">
-                    <label asp-for="SystemAccount.AccountId" class="col-md-3 col-form-label fw-bold"></label>
+                    <label asp-for="SystemAccount.AccountId" hidden class="col-md-3 col-form-label fw-bold"></label>
                     <div class="col-md-9">
-                        <input asp-for="SystemAccount.AccountId" class="form-control" placeholder="Enter account ID" />
+                        <input asp-for="SystemAccount.AccountId" hidden class="form-control" placeholder="Enter account ID" />
                         <span asp-validation-for="SystemAccount.AccountId" class="text-danger"></span>
                     </div>
                 </div>

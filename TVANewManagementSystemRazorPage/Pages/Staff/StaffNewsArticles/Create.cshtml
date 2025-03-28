@@ -15,9 +15,7 @@
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="NewsArticle.NewsArticleId" class="control-label"></label>
-                <input asp-for="NewsArticle.NewsArticleId" class="form-control" readonly />
-                <span asp-validation-for="NewsArticle.NewsArticleId" class="text-danger"></span>
+                <input hidden asp-for="NewsArticle.NewsArticleId" class="form-control" readonly />
             </div>
             <div class="form-group">
                 <label asp-for="NewsArticle.NewsTitle" class="control-label"></label>
@@ -45,26 +43,26 @@
                 <span asp-validation-for="NewsArticle.CategoryId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="NewsArticle.NewsStatus" class="control-label"></label>
-                <select asp-for="NewsArticle.NewsStatus" class="form-control" disabled>
+                <label asp-for="NewsArticle.NewsStatus" hidden class="control-label"></label>
+                <select hidden asp-for="NewsArticle.NewsStatus" class="form-control" disabled>
                     <option value="true">True</option>
                     <option value="false">False</option>
                 </select>
                 <span asp-validation-for="NewsArticle.NewsStatus" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="NewsArticle.CreatedById" class="control-label"></label>
-                <input asp-for="NewsArticle.CreatedById" class="form-control" readonly />
+                <label asp-for="NewsArticle.CreatedById" hidden class="control-label"></label>
+                <input asp-for="NewsArticle.CreatedById" hidden class="form-control" readonly />
                 <span asp-validation-for="NewsArticle.CreatedById" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="NewsArticle.UpdatedById" class="control-label"></label>
-                <input asp-for="NewsArticle.UpdatedById" class="form-control" readonly />
+                <label asp-for="NewsArticle.UpdatedById" hidden class="control-label"></label>
+                <input asp-for="NewsArticle.UpdatedById" hidden class="form-control" readonly />
                 <span asp-validation-for="NewsArticle.UpdatedById" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="NewsArticle.ModifiedDate" class="control-label"></label>
-                <input asp-for="NewsArticle.ModifiedDate" class="form-control" readonly />
+                <label asp-for="NewsArticle.ModifiedDate" hidden class="control-label"></label>
+                <input asp-for="NewsArticle.ModifiedDate" hidden class="form-control" readonly />
                 <span asp-validation-for="NewsArticle.ModifiedDate" class="text-danger"></span>
             </div>
             <div class="form-group">
